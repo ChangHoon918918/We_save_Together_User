@@ -31,6 +31,7 @@ import{
 import {View, ActivityIndicator} from 'react-native';
 
 
+
 //Colors
 const {brand, darkLight, primary} = Colors;
 

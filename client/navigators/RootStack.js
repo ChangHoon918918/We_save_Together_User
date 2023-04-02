@@ -6,14 +6,14 @@ const {primary, tertiary} = Colors;
 // React navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator, createStackNavigator } from '@react-navigation/stack';
-
 //screens
 import Login from './../screens/Login';
 import Signup from './../screens/Signup';
 import Welcome from './../screens/Welcome';
+import Feed from '../screens/Feed';
+import Article from '../screens/Article';
 
 const Stack = createStackNavigator();
-
 const RootStack = () => {
     return(
         <NavigationContainer>
@@ -26,14 +26,15 @@ const RootStack = () => {
                     headerTransparent: true,
                     headerTitle: '',
                     headerLeftContainerStyle: {
-                        paddingLeft: 20
+                        paddingLeft: 10
                     }
                 }}
                 initialRouteName="Login"
             >
                 <Stack.Screen name="Login" component={Login}/>
                 <Stack.Screen name="Signup" component={Signup}/>
-                <Stack.Screen /*options={{ headerTintColor: primary }}*/ name="Welcome" component={Welcome}/>
+                <Stack.Screen options={{headerShown: false}} name="Welcome" component={Welcome}/>
+                <Stack.Screen name="Feed" component={Feed}/>
             </Stack.Navigator>
         </NavigationContainer>
     )

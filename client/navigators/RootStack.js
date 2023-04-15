@@ -11,6 +11,11 @@ import Login from './../screens/Login';
 import Signup from './../screens/Signup';
 import Welcome from './../screens/Welcome';
 import Feed from '../screens/Feed';
+import Search from '../screens/Search';
+import CampaginView from '../screens/CampaginView';
+import InformationScreen from '../screens/InformationScreen';
+import MyInfoScreen from '../screens/myInfo/MyInfoScreen';
+import UpdateMyInfoScreen from '../screens/myInfo/UpdateMyInfoScreen';
 import Article from '../screens/Article';
 
 const Stack = createStackNavigator();
@@ -35,6 +40,11 @@ const RootStack = () => {
                 <Stack.Screen name="Signup" component={Signup}/>
                 <Stack.Screen options={{headerShown: false}} name="Welcome" component={Welcome}/>
                 <Stack.Screen name="Feed" component={Feed}/>
+                <Stack.Screen name="Search" component={Search}/>
+                <Stack.Screen name="CampaginView" component={CampaginView}/>
+                <Stack.Screen options={{headerShown: false}} name="InformationScreen" component={InformationScreen}/>
+                <Stack.Screen options={{headerShown: false}} name="MyInfoScreen" component={MyInfoScreen}/>
+                <Stack.Screen options={{headerShown: false}} name="UpdateMyInfoScreen" component={UpdateMyInfoScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     )

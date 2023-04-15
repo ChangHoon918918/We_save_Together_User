@@ -51,6 +51,12 @@ import Feed from './Feed';
 import Article from './Article';
 import KeyboardAvoidingWrapper from '../components/KeyboardAvoidingWrapper';
 import { ScrollView } from 'react-native-gesture-handler';
+import TabButton from '../components/TabButton';
+import LogoutButton from '../components/LogoutButton';
+import TitleMenuButton from '../components/TitleMenuButton';
+import moveCamapginList from '../components/moveCampaginList';
+import searchInput from '../components/searchInput';
+import JoinButton from '../components/JoinButton';
 
 const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
@@ -76,40 +82,40 @@ const Welcome = ({navigation, route}) => {
               <View style={{flex: 5, backgroundColor: '#ffffff', width: windowWidth, alignItems: 'flex-end'}}>
                 <View style={{backgroundColor: '#FFF1D7', width: windowWidth/1.4, height: windowHeight/1.4, borderRadius: 15, marginTop: 80, marginRight: 20}}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-                    {searchInput(currentTab, setCurrentTab, "통합검색", search, navigation, showMenu, setShowMenu)}
+                    {searchInput(currentTab, setCurrentTab, "통합검색", search, navigation, showMenu, windowWidth)}
                   </View>
                   <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-                    {TabButton(currentTab, setCurrentTab, "My 활동정보", myInfo)}
-                    {TabButton(currentTab, setCurrentTab, "이용약관", ToS)}
-                  </View>
-
-                  <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-                    {TabButton(currentTab, setCurrentTab, "My 실시간 캠페인", liveCampagin)}
-                    {TabButton(currentTab, setCurrentTab, "공지사항", information)}
+                    {TabButton(currentTab, setCurrentTab, "My 활동정보", myInfo, navigation, windowWidth)}
+                    {TabButton(currentTab, setCurrentTab, "이용약관", ToS, navigation, windowWidth)}
                   </View>
 
                   <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-                    {TabButton(currentTab, setCurrentTab, "My 가입 정보", registerInfo)}
-                    {TabButton(currentTab, setCurrentTab, "이벤트", event)}
+                    {TabButton(currentTab, setCurrentTab, "My 실시간 캠페인", liveCampagin, navigation, windowWidth)}
+                    {TabButton(currentTab, setCurrentTab, "공지사항", information, navigation, windowWidth)}
                   </View>
 
                   <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-                    {TabButton(currentTab, setCurrentTab, "My 캠페인 리뷰", campaginReview)}
-                    {TabButton(currentTab, setCurrentTab, "전체 캠페인", allCampagin)}
+                    {TabButton(currentTab, setCurrentTab, "My 가입 정보", registerInfo, navigation, windowWidth)}
+                    {TabButton(currentTab, setCurrentTab, "이벤트", event, navigation, windowWidth)}
                   </View>
 
                   <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-                    {TabButton(currentTab, setCurrentTab, "My 질의응답", myQnA)}
-                    {TabButton(currentTab, setCurrentTab, "Point Shop", pointShop)}
+                    {TabButton(currentTab, setCurrentTab, "My 캠페인 리뷰", campaginReview, navigation, windowWidth)}
+                    {TabButton(currentTab, setCurrentTab, "전체 캠페인", allCampagin, navigation, windowWidth)}
                   </View>
 
                   <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-                    {TabButton(currentTab, setCurrentTab, "My 신고내역", reportLog)}
-                    {TabButton(currentTab, setCurrentTab, "결제수단관리", managePayment)}
+                    {TabButton(currentTab, setCurrentTab, "My 질의응답", myQnA, navigation, windowWidth)}
+                    {TabButton(currentTab, setCurrentTab, "Point Shop", pointShop, navigation, windowWidth)}
+                  </View>
+
+                  <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+                    {TabButton(currentTab, setCurrentTab, "My 신고내역", reportLog, navigation, windowWidth)}
+                    {TabButton(currentTab, setCurrentTab, "결제수단관리", managePayment, navigation, windowWidth)}
                   </View>
 
                   <View style={{flexDirection: 'row', justifyContent: 'flex-start', marginLeft: 5}}>
-                    {TabButton(currentTab, setCurrentTab, "고객센터", userCenter)}
+                    {TabButton(currentTab, setCurrentTab, "고객센터", userCenter, navigation, windowWidth)}
                   </View>
                 </View>
               </View>
@@ -118,7 +124,7 @@ const Welcome = ({navigation, route}) => {
                   <View style={{flexDirection: 'row'}}>
                     <Image style={{width: 40, height: 40, margin: 'auto', borderRadius: 50, borderWidth: 2, borderColor: '#E5E7EB'}} resizeMode="cover" source={require('./../assets/img/img1.png')}/>
                     <Text style={{fontSize: 25}}>{name} 님 </Text>
-                    <View style={{marginTop: -20, marginLeft: 35}}>
+                    <View style={{position: 'absolute', top: -20, right: 0}}>
                       {LogoutButton(currentTab, setCurrentTab, "LogOut", logout, navigation, showMenu, setShowMenu)}
                     </View>
                   </View>
@@ -126,7 +132,7 @@ const Welcome = ({navigation, route}) => {
                   <View style={{backgroundColor: '#C4E1C5', width: windowWidth/1.6, height: windowHeight/20, borderRadius: 10, marginTop: 25, flexDirection: 'row', justifyContent: 'space-evenly'}}>
                     {TitleMenuButton(currentTab, setCurrentTab, "Notice", notice)}
                     {TitleMenuButton(currentTab, setCurrentTab, "Shop", shop)}
-                    {TitleMenuButton(currentTab, setCurrentTab, "QnA", QnA)}
+                    {TitleMenuButton(currentTab, setCurrentTab, "QnA", QnA, navigation)}
                   </View>
                 </View>
               </View>
@@ -225,34 +231,34 @@ const Welcome = ({navigation, route}) => {
                 </View>
                 <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={{flexDirection: 'row'}}>
                   <View style={{alignItems: 'center', paddingBottom: 20}}>
-                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'skyblue', margin: 10}} />
+                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'gray', margin: 10}} />
                     <Text>제주쓰담</Text>
-                    {JoinButton(currentTab, setCurrentTab, "지금신청", managePayment, navigation)}
+                    {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
                   </View>
                   <View style={{alignItems: 'center'}}>
-                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'skyblue', margin: 10}} />
+                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'gray', margin: 10}} />
                     <Text>제주쓰담</Text>
-                    {JoinButton(currentTab, setCurrentTab, "지금신청", managePayment, navigation)}
+                    {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
                   </View>
                   <View style={{alignItems: 'center'}}>
-                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'skyblue', margin: 10}} />
+                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'gray', margin: 10}} />
                     <Text>제주쓰담</Text>
-                    {JoinButton(currentTab, setCurrentTab, "지금신청", managePayment, navigation)}
+                    {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
                   </View>
                   <View style={{alignItems: 'center'}}>
-                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'skyblue', margin: 10}} />
+                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'gray', margin: 10}} />
                     <Text>제주쓰담</Text>
-                    {JoinButton(currentTab, setCurrentTab, "지금신청", managePayment, navigation)}
+                    {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
                   </View>
                   <View style={{alignItems: 'center'}}>
-                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'skyblue', margin: 10}} />
+                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'gray', margin: 10}} />
                     <Text>제주쓰담</Text>
-                    {JoinButton(currentTab, setCurrentTab, "지금신청", managePayment, navigation)}
+                    {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
                   </View>
                   <View style={{alignItems: 'center'}}>
-                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'skyblue', margin: 10}} />
+                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'gray', margin: 10}} />
                     <Text>제주쓰담</Text>
-                    {JoinButton(currentTab, setCurrentTab, "지금신청", managePayment, navigation)}
+                    {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
                   </View>
                 </ScrollView>
             </View>
@@ -264,204 +270,5 @@ const Welcome = ({navigation, route}) => {
     </SafeAreaView>
     );
 };
-
-// For multiple Buttons...
-const TabButton = (currentTab, setCurrentTab, title, image, navigation, showMenu) => {
-        return (
-      
-          <Pressable onPress={() => {
-            if (title == "LogOut") {
-                {navigation.navigate('Login')}
-            } else {
-              setCurrentTab(title)
-            }
-          }}>
-            <View elevation={10} style={{
-              width: windowWidth/3,
-              flexDirection: "row",
-              alignItems: 'center',
-              paddingVertical: 8,
-              backgroundColor: '#fff',
-              paddingLeft: 5,
-              paddingRight: 20,
-              borderRadius: 8,
-              marginTop: 15
-            }}>
-      
-              <Image source={image} style={{
-                width: 20, height: 20,
-              }}></Image>
-      
-              <Text style={{
-                fontSize: 12,
-                fontWeight: 'bold',
-                paddingLeft: 10,
-                color: currentTab == title ? "#5359D1" : "black"
-              }}>{title}</Text>
-      
-            </View>
-          </Pressable>
-        );
-}
-
-// For multiple Buttons...
-const LogoutButton = (currentTab, setCurrentTab, title, image, navigation, showMenu) => {
-  return (
-
-    <TouchableOpacity onPress={() => {
-      if (title == "LogOut") {
-          {navigation.navigate('Login')}
-      } else {
-        setCurrentTab(title)
-      }
-    }}>
-      <View style={{
-        flexDirection: "row",
-        alignItems: 'center',
-        paddingVertical: 8,
-        backgroundColor: '#C4E1C5',
-        paddingLeft: 8,
-        paddingRight: 25,
-        borderRadius: 8,
-        borderWidth: 1,
-        marginTop: 15
-      }}>
-
-        <Text style={{
-          fontSize: 13,
-          fontWeight: 'bold',
-          paddingLeft: 15,
-          color: currentTab == title ? "#5359D1" : "black"
-        }}>{title}</Text>
-
-      </View>
-    </TouchableOpacity>
-  );
-}
-
-const TitleMenuButton = (currentTab, setCurrentTab, title, image, navigation, showMenu) => {
-    return (
-  
-      <TouchableOpacity onPress={() => {
-        if (title == "LogOut") {
-            {navigation.navigate('Login')}
-        } else {
-          setCurrentTab(title)
-        }
-      }}>
-            <View style={{
-              flexDirection: "row",
-              alignItems: 'center',
-              paddingVertical: 8,
-              paddingLeft: 8
-            }}>
-      
-              <Image source={image} style={{
-                width: 20, height: 20,
-                tintColor: currentTab == title ? "#5359D1" : "black"
-              }}></Image>
-      
-              <Text style={{
-                fontSize: 13,
-                fontWeight: 'bold',
-                paddingLeft: 7,
-                color: currentTab == title ? "#5359D1" : "black"
-              }}>{title}</Text>
-      
-            </View>
-      </TouchableOpacity>
-    );
-}
-
-const searchInput = (currentTab, setCurrentTab, title, image, navigation, showMenu) => {
-  return (
-
-    <Pressable  onPress={() => {
-      if (title == "통합검색") {
-        {navigation.navigate('Feed')}
-      } else {
-        setCurrentTab(title)
-      }
-    }}>
-          <View elevation={10} style={{
-              width: windowWidth/1.7,
-              flexDirection: "row",
-              alignItems: 'center',
-              paddingVertical: 8,
-              backgroundColor: '#fff',
-              paddingLeft: 5,
-              paddingRight: 20,
-              borderWidth: 1,
-              borderRadius: 8,
-              marginTop: 15
-          }}>
-    
-            <Image source={image} style={{
-              width: 20, height: 20,
-            }}></Image>
-    
-            <Text style={{
-              fontSize: 13,
-              fontWeight: 'bold',
-              paddingLeft: 7,
-              color: 'gray  '
-            }}>{title}</Text>
-    
-          </View>
-    </Pressable>
-  );
-}
-
-const moveCamapginList = (currentTab, setCurrentTab, title, navigation) => {
-  return (
-
-    <TouchableOpacity onPress={() => {
-      if (title == "캠페인 전체 목록 바로 가기 >") {
-          {navigation.navigate('Feed')}
-      } else {
-        setCurrentTab(title)
-      }
-    }}>
-        <Text style={{
-          fontSize: 16,
-          fontWeight: 'bold',
-          
-          color: currentTab == title ? "#5359D1" : "black"
-        }}>{title}</Text>
-    </TouchableOpacity>
-  );
-}
-
-const JoinButton = (currentTab, setCurrentTab, title, image, navigation, showMenu) => {
-  return (
-
-    <Pressable onPress={() => {
-      if (title == "지금신청") {
-          {navigation.navigate('Feed')}
-      } else {
-        setCurrentTab(title)
-      }
-    }}>
-      <View elevation={10} style={{
-        width: windowWidth/5,
-        flexDirection: "row",
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 8,
-        backgroundColor: '#fff',
-        borderWidth: 1,
-        borderRadius: 8,
-      }}>
-
-        <Text style={{
-          fontSize: 12,
-          fontWeight: 'bold',
-          color: currentTab == title ? "#5359D1" : "black"
-        }}>{title}</Text>
-
-      </View>
-    </Pressable>
-  );
-}
 
 export default Welcome;

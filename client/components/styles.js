@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {View, Text, Image, TextInput, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TextInput, TouchableOpacity, Dimensions} from 'react-native';
 import Constants from 'expo-constants';
 
 const StatusBarHeight = Constants.statusBarHeight;
@@ -17,6 +17,8 @@ export const Colors = {
 };
 
 const {primary, secondary, tertiary, darkLight, brand, green, red, bread} = Colors;
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export const StyledContainer = styled.View`
     flex: 1;
@@ -105,6 +107,21 @@ export const StyledTextInput = styled.TextInput`
     padding-left: 55px;
     padding-right: 55px;
     border-radius: 5px;
+    font-size: 16px;
+    height: 60px;
+    margin-vertical: 3px;
+    margin-bottom: 10px;
+    color: ${tertiary}; 
+`;
+
+export const StyledSearchInput = styled.TextInput`
+    background-color: ${'white'};
+    width: ${windowWidth-30}px;
+    align-items: center;
+    padding: 15px;
+    padding-right: 55px;
+    border-radius: 10px;
+    border-width: 2px;
     font-size: 16px;
     height: 60px;
     margin-vertical: 3px;

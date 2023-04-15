@@ -7,26 +7,10 @@ import {Formik} from 'formik';
 //icons
 import {Octicons, Ionicons, Fontisto} from '@expo/vector-icons';
 
-import{ 
-    StyledContainer, 
-    InnerContainer, 
-    PageLogo, 
-    PageTitle, 
-    SubTitle, 
-    StyledFormArea, 
-    LeftIcon, 
-    StyledInputLabel, 
-    StyledTextInput, 
-    RightIcon,
-    StyledButton,
-    ButtonText,
-    Colors,
-    MsgBox,
-    Line,
-    ExtraView,
-    ExtraText,
-    TextLink,
-    TextLinkContent
+import{ StyledContainer, InnerContainer, PageLogo, PageTitle, SubTitle, 
+        StyledFormArea, LeftIcon, StyledInputLabel, StyledTextInput, RightIcon,
+        StyledButton, ButtonText, Colors, MsgBox, Line,
+        ExtraView, ExtraText, TextLink, TextLinkContent
 } from './../components/styles';
 import {View, ActivityIndicator} from 'react-native';
 
@@ -48,7 +32,7 @@ const Login = ({navigation}) => {
 
     const handlerLogin = (credentials, setSubmitting) => {
         handleMessage(null);
-        const url = 'http://192.168.45.169:5000/api/users/login' //(locahhost -> 로컬 와이파이 주소)
+        const url = 'http://192.168.160.187:5000/api/users/login' //(locahhost -> 로컬 와이파이 주소)
         axios
         .post(url, credentials)
         .then((response) => {

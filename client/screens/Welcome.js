@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -52,7 +52,6 @@ import Article from './Article';
 import KeyboardAvoidingWrapper from '../components/KeyboardAvoidingWrapper';
 import { ScrollView } from 'react-native-gesture-handler';
 import TabButton from '../components/TabButton';
-import LogoutButton from '../components/LogoutButton';
 import TitleMenuButton from '../components/TitleMenuButton';
 import moveCamapginList from '../components/moveCampaginList';
 import searchInput from '../components/searchInput';
@@ -62,8 +61,16 @@ const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+// async-storage
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+//credentials context
+import { CredentialsContext } from '../components/CredentialsContext';
+
 const Welcome = ({navigation, route}) => {
-    const {name, email} = route.params;
+    //context
+    const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
+    const {name, email} = storedCredentials;
     const [currentTab, setCurrentTab] = useState("Home");
     // To get the curretn Status of menu ...
     const [showMenu, setShowMenu] = useState(true);
@@ -72,6 +79,42 @@ const Welcome = ({navigation, route}) => {
     const scaleValue = useRef(new Animated.Value(1)).current;
     const closeButtonOffset = useRef(new Animated.Value(0)).current;
     const [animatedViewRadius, setAnimatedViewRadius] = useState(0);
+
+    const clearLogin = () => {
+      AsyncStorage.removeItem('We_save_together')
+      .then(() => {
+        setStoredCredentials("");
+      })
+      .catch(error => console.log(error))
+    }
+
+    const LogoutButton = (currentTab, setCurrentTab, title, image, navigation, showMenu) => {
+      return (
+    
+        <TouchableOpacity onPress={clearLogin}>
+          <View style={{
+            flexDirection: "row",
+            alignItems: 'center',
+            paddingVertical: 8,
+            backgroundColor: '#C4E1C5',
+            paddingLeft: 8,
+            paddingRight: 25,
+            borderRadius: 8,
+            borderWidth: 1,
+            marginTop: 15
+          }}>
+    
+            <Text style={{
+              fontSize: 13,
+              fontWeight: 'bold',
+              paddingLeft: 15,
+              color: currentTab == title ? "#5359D1" : "black"
+            }}>{title}</Text>
+    
+          </View>
+        </TouchableOpacity>
+      );
+    }
 
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: '#ffffff', alignItems: 'center', justifyContent: 'flex-start',}}>
@@ -125,7 +168,7 @@ const Welcome = ({navigation, route}) => {
                     <Image style={{width: 40, height: 40, margin: 'auto', borderRadius: 50, borderWidth: 2, borderColor: '#E5E7EB'}} resizeMode="cover" source={require('./../assets/img/img1.png')}/>
                     <Text style={{fontSize: 25}}>{name} 님 </Text>
                     <View style={{position: 'absolute', top: -20, right: 0}}>
-                      {LogoutButton(currentTab, setCurrentTab, "LogOut", logout, navigation, showMenu, setShowMenu)}
+                      {LogoutButton(currentTab, setCurrentTab, "LogOut", logout, navigation, showMenu, setShowMenu, clearLogin)}
                     </View>
                   </View>
 

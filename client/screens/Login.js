@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { StatusBar } from 'expo-status-bar';
 
 // formik
@@ -7,13 +7,28 @@ import {Formik} from 'formik';
 //icons
 import {Octicons, Ionicons, Fontisto} from '@expo/vector-icons';
 
-import{ StyledContainer, InnerContainer, PageLogo, PageTitle, SubTitle, 
-        StyledFormArea, LeftIcon, StyledInputLabel, StyledTextInput, RightIcon,
-        StyledButton, ButtonText, Colors, MsgBox, Line,
-        ExtraView, ExtraText, TextLink, TextLinkContent
+import{ 
+    StyledContainer, 
+    InnerContainer, 
+    PageLogo, 
+    PageTitle, 
+    SubTitle, 
+    StyledFormArea, 
+    LeftIcon, 
+    StyledInputLabel, 
+    StyledTextInput, 
+    RightIcon,
+    StyledButton,
+    ButtonText,
+    Colors,
+    MsgBox,
+    Line,
+    ExtraView,
+    ExtraText,
+    TextLink,
+    TextLinkContent
 } from './../components/styles';
 import {View, ActivityIndicator} from 'react-native';
-
 
 
 //Colors
@@ -25,14 +40,23 @@ import KeyboardAvoidingWrapper  from './../components/KeyboardAvoidingWrapper';
 // API client
 import axios from 'axios';
 
+// async-storage
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+//credentials context
+import { CredentialsContext } from '../components/CredentialsContext';
+
 const Login = ({navigation}) => {
     const [hidePassword, setHidePassword] = useState(true);
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
 
+    //context
+    const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
+
     const handlerLogin = (credentials, setSubmitting) => {
         handleMessage(null);
-        const url = 'http://192.168.160.187:5000/api/users/login' //(locahhost -> 로컬 와이파이 주소)
+        const url = 'http://192.168.45.169:5000/api/users/login' //(locahhost -> 로컬 와이파이 주소)
         axios
         .post(url, credentials)
         .then((response) => {
@@ -42,7 +66,7 @@ const Login = ({navigation}) => {
             if(loginSuccess !== true) {
                 handleMessage(message, loginSuccess);
             } else {
-                navigation.navigate('Welcome', {userId, name, email});
+                persistLogin({userId, name, email}, message, status);
             }
             setSubmitting(false);
         })
@@ -56,6 +80,18 @@ const Login = ({navigation}) => {
     const handleMessage = (message, type = 'FAILED') =>{
         setMessage(message);
         setMessageType(type);
+    }
+
+    const persistLogin = (credentials, message, status) => {
+        AsyncStorage.setItem('We_save_together', JSON.stringify(credentials))
+        .then(() => {
+            handleMessage(message, status);
+            setStoredCredentials(credentials);
+        })
+        .catch((error) => {
+            console.log(error);
+            handleMessage('Persisting login failed');
+        })
     }
 
     return (

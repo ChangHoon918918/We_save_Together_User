@@ -43,6 +43,12 @@ import KeyboardAvoidingWrapper  from './../components/KeyboardAvoidingWrapper';
 // api client
 import axios from 'axios';
 
+// async-storage
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+//credentials context
+import { CredentialsContext } from '../components/CredentialsContext';
+
 const Signup = ({navigation}) => {
     const [hidePassword, setHidePassword] = useState(true);
     const [show, setShow] = useState(false);
@@ -53,6 +59,9 @@ const Signup = ({navigation}) => {
 
     // Actual date of birth to be sent
     const [dob, setDob] = useState();
+
+    //context
+    const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -68,7 +77,7 @@ const Signup = ({navigation}) => {
     // form handling
     const handleSignup = (credentials, setSubmitting) => {
         handleMessage(null);
-        const url = 'http://192.168.160.187:5000/api/users/register' //(locahhost -> 로컬 와이파이 주소)
+        const url = 'http://192.168.45.169:5000/api/users/register' //(locahhost -> 로컬 와이파이 주소)
         axios
         .post(url, credentials)
         .then((response) => {
@@ -78,7 +87,7 @@ const Signup = ({navigation}) => {
             if(success !== true) {
                 handleMessage(message, loginSuccess);
             } else {
-                navigation.navigate('Welcome', {name, email});
+                persistLogin({name, email}, message, status);
             }
             setSubmitting(false);
         })
@@ -92,6 +101,18 @@ const Signup = ({navigation}) => {
     const handleMessage = (message, type = 'FAILED') =>{
         setMessage(message);
         setMessageType(type);
+    }
+
+    const persistLogin = (credentials, message, status) => {
+        AsyncStorage.setItem('We_save_together', JSON.stringify(credentials))
+        .then(() => {
+            handleMessage(message, status);
+            setStoredCredentials(credentials);
+        })
+        .catch((error) => {
+            console.log(error);
+            handleMessage('Persisting login failed');
+        })
     }
 
     return (

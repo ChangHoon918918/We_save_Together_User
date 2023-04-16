@@ -19,8 +19,14 @@ import UpdateMyInfoScreen from '../screens/myInfo/UpdateMyInfoScreen';
 import Article from '../screens/Article';
 
 const Stack = createStackNavigator();
+
+//credentials context
+import { CredentialsContext } from '../components/CredentialsContext'; 
+
 const RootStack = () => {
     return(
+        <CredentialsContext.Consumer>
+        {({storedCredentials}) => (
         <NavigationContainer>
             <Stack.Navigator
                 screenOptions={{
@@ -36,8 +42,8 @@ const RootStack = () => {
                 }}
                 initialRouteName="Login"
             >
-                <Stack.Screen name="Login" component={Login}/>
-                <Stack.Screen name="Signup" component={Signup}/>
+            {storedCredentials ? (
+                <>
                 <Stack.Screen options={{headerShown: false}} name="Welcome" component={Welcome}/>
                 <Stack.Screen name="Feed" component={Feed}/>
                 <Stack.Screen name="Search" component={Search}/>
@@ -45,8 +51,16 @@ const RootStack = () => {
                 <Stack.Screen options={{headerShown: false}} name="InformationScreen" component={InformationScreen}/>
                 <Stack.Screen options={{headerShown: false}} name="MyInfoScreen" component={MyInfoScreen}/>
                 <Stack.Screen options={{headerShown: false}} name="UpdateMyInfoScreen" component={UpdateMyInfoScreen}/>
+                </>
+                ) : (<>
+                    <Stack.Screen name="Login" component={Login}/>
+                    <Stack.Screen name="Signup" component={Signup}/>         
+                </>
+            )}
             </Stack.Navigator>
         </NavigationContainer>
+        )}
+        </CredentialsContext.Consumer>
     )
 }
 

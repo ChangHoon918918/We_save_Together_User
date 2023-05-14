@@ -64,6 +64,17 @@ export const Avatar = styled.Image`
     margin-right: 10px;
 `;
 
+export const Poster_PV = styled.Image`
+    width: 250px;
+    height: 350px;
+    margin: auto;
+    border-radius: 50px;
+    border-width: 2px;
+    border-color: ${secondary};
+    margin-bottom: 10px;
+    margin-top: 15px;
+`;
+
 export const WelcomeImage = styled.Image`
     height: 50%;
     min-width: 100%;

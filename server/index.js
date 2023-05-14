@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const config = require('./config/key');
 const { auth } = require('./middleware/auth');
 const { User } = require("./models/User");
+const { Campagin } = require("./models/Campagin");
+const router = express.Router();
 
 //application/x-www-form-urlencoded 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -38,6 +40,33 @@ app.post('/api/users/register', (req, res) => {
       email: user.email
     })
   })
+})
+
+app.post('/api/campagins/register', (req, res) => {
+
+  const campagin = new Campagin(req.body)
+
+  campagin.save((err, campaginInfo) => {
+    if (err) return res.json( { success: false, err })
+    return res.status(200).json({
+      success: true,
+      name: campagin.name,
+      operatingDate: campagin.operatingDate,
+      point: campagin.point,
+      volunteerTimer: campagin.volunteerTimer
+    })
+  })
+})
+
+app.post('/api/campagins/getinfo', (req, res) => {
+  Campagin.find( (err, campagins) => {
+    if(err) return res.status(500).send({error: 'database failure'});
+    res.json(campagins);
+  })
+  // Campagin.findOne( {name: req.body.name}, (err, campagins) => {
+  //   if(err) return res.status(500).send({error: 'database failure'});
+  //   res.json(campagins);
+  // })
 })
 
 app.post('/api/users/login', (req, res) => {

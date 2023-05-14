@@ -1,6 +1,15 @@
 import { Animated, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Dimensions, Pressable } from 'react-native';
+import React, {useState, useContext} from 'react';
+
+// API client
+import axios from 'axios';
+import { CredentialsContext2 } from './CredentialsContext2';
 
 const TabButton = (currentTab, setCurrentTab, title, image, navigation, windowWidth) => {
+    const [campaginData, setData] = useState();
+
+    //context
+    const {storedCredentials2, setStoredCredentials2} = useContext(CredentialsContext2);
     return (
   
       <Pressable onPress={() => {
@@ -8,10 +17,29 @@ const TabButton = (currentTab, setCurrentTab, title, image, navigation, windowWi
             {navigation.navigate('Login')}
         }
         else if(title == "전체 캠페인"){
-            {navigation.navigate('CampaginView')}
+          const url = 'http://192.168.45.169:5000/api/campagins/getinfo' //(locahhost -> 로컬 와이파이 주소)
+          // axios
+          // .post(url)
+          // .then((response) => {
+          //     const result = response.data;
+          //     const {point, volunteerTimer, name, operatingDate} = result;
+          //     setData(result);
+          //     console.log(campaginData.length);
+          //     setStoredCredentials2(result);
+          // })
+          // .catch(error => {
+          //     console.log(result);
+          // })
+          {navigation.navigate('CampaginView', {campaginData})}
         }
         else if(title == "My 가입 정보"){
           {navigation.navigate('MyInfoScreen')}
+        }
+        else if(title == "공지사항"){
+          {navigation.navigate('Notice')}
+        }
+        else if(title == "사진 찍기"){
+          {navigation.navigate('TimeStampCamera')}
         }
         else {
           setCurrentTab(title)

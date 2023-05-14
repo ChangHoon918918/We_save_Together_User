@@ -29,6 +29,7 @@ import AdEx from './../assets/img/AdEx.png';
 import notice from './../assets/img/notice.png';
 import shop from './../assets/img/shop.png';
 import QnA from './../assets/img/QnA.png';
+import camera from './../assets/img/camera.png';
 // Menu
 import menu from './../assets/img/menu.png';
 import close from './../assets/img/close.png';
@@ -67,7 +68,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //credentials context
 import { CredentialsContext } from '../components/CredentialsContext';
 
-const Welcome = ({navigation, route}) => {
+const Welcome = ({navigation, route, campaginData}) => {
     //context
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
     const {name, email} = storedCredentials;
@@ -157,8 +158,9 @@ const Welcome = ({navigation, route}) => {
                     {TabButton(currentTab, setCurrentTab, "결제수단관리", managePayment, navigation, windowWidth)}
                   </View>
 
-                  <View style={{flexDirection: 'row', justifyContent: 'flex-start', marginLeft: 5}}>
+                  <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
                     {TabButton(currentTab, setCurrentTab, "고객센터", userCenter, navigation, windowWidth)}
+                    {TabButton(currentTab, setCurrentTab, "사진 찍기", camera, navigation, windowWidth)}
                   </View>
                 </View>
               </View>

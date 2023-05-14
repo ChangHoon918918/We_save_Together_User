@@ -16,7 +16,9 @@ import CampaginView from '../screens/CampaginView';
 import InformationScreen from '../screens/InformationScreen';
 import MyInfoScreen from '../screens/myInfo/MyInfoScreen';
 import UpdateMyInfoScreen from '../screens/myInfo/UpdateMyInfoScreen';
+import TimeStampCamera from '../screens/TimeStampCamera';
 import Article from '../screens/Article';
+import Notice from '../screens/Notice';
 
 const Stack = createStackNavigator();
 
@@ -48,6 +50,8 @@ const RootStack = () => {
                 <Stack.Screen name="Feed" component={Feed}/>
                 <Stack.Screen name="Search" component={Search}/>
                 <Stack.Screen name="CampaginView" component={CampaginView}/>
+                <Stack.Screen options={{headerShown: true}} name="Notice" component={Notice}/>
+                <Stack.Screen options={{headerShown: true}} name="TimeStampCamera" component={TimeStampCamera}/>
                 <Stack.Screen options={{headerShown: false}} name="InformationScreen" component={InformationScreen}/>
                 <Stack.Screen options={{headerShown: false}} name="MyInfoScreen" component={MyInfoScreen}/>
                 <Stack.Screen options={{headerShown: false}} name="UpdateMyInfoScreen" component={UpdateMyInfoScreen}/>

@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { StatusBar } from 'expo-status-bar';
 
 // formik
 import {Formik} from 'formik';
 
 //icons
-import {Octicons, Ionicons, Fontisto} from '@expo/vector-icons';
+import {Octicons, Ionicons, Fontisto, Material} from '@expo/vector-icons';
 
 import{ 
     StyledContainer2, 
@@ -57,11 +57,11 @@ const Signup = ({navigation}) => {
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
 
-    // Actual date of birth to be sent
-    const [dob, setDob] = useState();
-
     //context
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
+
+    // Actual date of birth to be sent
+    const [dob, setDob] = useState();
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -82,12 +82,12 @@ const Signup = ({navigation}) => {
         .post(url, credentials)
         .then((response) => {
             const result = response.data;
-            const {message, status, data, success, userId, name, email} = result;
+            const {message, status, data, success, user_id, name, email, address, phoneNumber} = result;
 
             if(success !== true) {
                 handleMessage(message, loginSuccess);
             } else {
-                persistLogin({name, email}, message, status);
+                persistLogin({user_id, name, email, address, phoneNumber}, message, status);
             }
             setSubmitting(false);
         })
@@ -135,10 +135,10 @@ const Signup = ({navigation}) => {
                 )}
 
                 <Formik 
-                    initialValues = {{ name: '', email: '', dateOfBirth: '', password: '', confirmPassword: ''}}
+                    initialValues = {{ name: '', user_id: '', email: '', address: '', dateOfBirth: '', password: '', confirmPassword: '', phoneNumber: ''}}
                     onSubmit={(values, {setSubmitting}) => {
                         values = {...values, dateOfBirth: dob};
-                        if(values.email == '' || values.password == '' || values.name == '' || values.dateOfBirth == '' || values.confirmPassword == ''){
+                        if(values.user_id == '' || values.email == '' || values.address == '' || values.password == '' || values.name == '' || values.dateOfBirth == '' || values.confirmPassword == '' || values.phoneNumber == ''){
                             handleMessage('Please fill all the fileds');
                             setSubmitting(false);
                         } else if(values.password !== values.confirmPassword) {
@@ -162,6 +162,16 @@ const Signup = ({navigation}) => {
                         />
 
                         <MyTextInput 
+                            label="ID"
+                            icon = "mail"
+                            placeholder="ID"
+                            placeholderTextColor = {darkLight}
+                            onChangeText={handleChange('user_id')}
+                            onBlur={handleBlur('user_id')}
+                            value={values.user_id}
+                        />
+
+                        <MyTextInput 
                             label="이메일 주소"
                             icon = "mail"
                             placeholder="hn016768@gmail.com"
@@ -170,6 +180,16 @@ const Signup = ({navigation}) => {
                             onBlur={handleBlur('email')}
                             value={values.email}
                             keyboardType="email-address"
+                        />
+                        
+                        <MyTextInput 
+                            label="주소"
+                            icon = "home"
+                            placeholder="OO시 OO구/군 OO읍/면/동"
+                            placeholderTextColor = {darkLight}
+                            onChangeText={handleChange('address')}
+                            onBlur={handleBlur('address')}
+                            value={values.address}
                         />
 
                         <MyTextInput 
@@ -212,6 +232,17 @@ const Signup = ({navigation}) => {
                             isPassword={true}
                             hidePassword={hidePassword}
                             setHidePassword = {setHidePassword}
+                        />
+
+                        <MyTextInput 
+                            label="전화번호"
+                            icon = "device-mobile"
+                            placeholder="000-0000-0000"
+                            placeholderTextColor = {darkLight}
+                            onChangeText={handleChange('phoneNumber')}
+                            onBlur={handleBlur('phoneNumber')}
+                            value={values.phoneNumber}
+                            keyboardType="decimal-pad"
                         />
                         
                         <MsgBox type={messageType}>{message}</MsgBox>

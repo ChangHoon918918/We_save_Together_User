@@ -9,14 +9,23 @@ const userSchema = mongoose.Schema({
         type: String,
         maxlength: 50
     },
+    user_id: {
+        type: String,
+        unique: 1
+    },
     email: {
         type: String,
         trim: true,
-        unique: 1
+    },
+    address: {
+        type: String,
     },
     password: {
         type: String,
         minlength: 5
+    },
+    address: {
+        type: String
     },
     lastname: {
         type: String,
@@ -35,6 +44,9 @@ const userSchema = mongoose.Schema({
     },
     dateOfBirth: {
         type: Date
+    },
+    phoneNumber: {
+        type: String
     }
 })
 

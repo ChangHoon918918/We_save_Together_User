@@ -47,18 +47,18 @@ const RootStack = () => {
             {storedCredentials ? (
                 <>
                 <Stack.Screen options={{headerShown: false}} name="Welcome" component={Welcome}/>
-                <Stack.Screen name="Feed" component={Feed}/>
-                <Stack.Screen name="Search" component={Search}/>
                 <Stack.Screen name="CampaginView" component={CampaginView}/>
                 <Stack.Screen options={{headerShown: true}} name="Notice" component={Notice}/>
                 <Stack.Screen options={{headerShown: true}} name="TimeStampCamera" component={TimeStampCamera}/>
                 <Stack.Screen options={{headerShown: false}} name="InformationScreen" component={InformationScreen}/>
-                <Stack.Screen options={{headerShown: false}} name="MyInfoScreen" component={MyInfoScreen}/>
                 <Stack.Screen options={{headerShown: false}} name="UpdateMyInfoScreen" component={UpdateMyInfoScreen}/>
+                <Stack.Screen options={{headerShown: false}} name="MyInfoScreen" component={MyInfoScreen}/>
+                
                 </>
                 ) : (<>
+                    <Stack.Screen name="Signup" component={Signup}/>
                     <Stack.Screen name="Login" component={Login}/>
-                    <Stack.Screen name="Signup" component={Signup}/>         
+                             
                 </>
             )}
             </Stack.Navigator>

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useRef, useState, useContext, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -68,10 +68,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //credentials context
 import { CredentialsContext } from '../components/CredentialsContext';
 
-const Welcome = ({navigation, route, campaginData}) => {
+import axios from 'axios';
+
+const Welcome = ({navigation, campaginData}) => {
     //context
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
-    const {name, email} = storedCredentials;
+    const {user_id, name, email, address, phoneNumber} = storedCredentials;
     const [currentTab, setCurrentTab] = useState("Home");
     // To get the curretn Status of menu ...
     const [showMenu, setShowMenu] = useState(true);
@@ -80,6 +82,23 @@ const Welcome = ({navigation, route, campaginData}) => {
     const scaleValue = useRef(new Animated.Value(1)).current;
     const closeButtonOffset = useRef(new Animated.Value(0)).current;
     const [animatedViewRadius, setAnimatedViewRadius] = useState(0);
+    const [list, setData] = useState([]);
+    const [user_infolist, setInfoData] = useState([]);
+
+    function post() {
+      const url = 'http://192.168.45.169:5000/api/campagins/getinfo' //(locahhost -> 로컬 와이파이 주소)
+      axios
+      .post(url)
+      .then((response) => {
+          const result = response.data;
+          const {point, volunteerTimer, name, operatingDate} = result;
+          setData(result);
+          console.log(list);
+      })
+      .catch(error => {
+          console.log(result);
+      })
+    }
 
     const clearLogin = () => {
       AsyncStorage.removeItem('We_save_together')
@@ -116,6 +135,29 @@ const Welcome = ({navigation, route, campaginData}) => {
         </TouchableOpacity>
       );
     }
+
+    function update_userinfo() {
+      const url = 'http://192.168.45.169:5000/api/users/getuserinfo' //(locahhost -> 로컬 와이파이 주소)
+      axios
+      .post(url,
+          {
+              "user_id" : user_id
+          }   
+      )
+      .then((response) => {
+          const result = response.data;
+          const {user_id, name, email, address, phoneNumber} = result;
+          setInfoData(result);
+          console.log(user_infolist);
+      })
+      .catch(error => {
+          console.log(user_infolist);
+      })
+    }
+    useEffect(() => {
+        post();
+        update_userinfo();
+    }, []);
 
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: '#ffffff', alignItems: 'center', justifyContent: 'flex-start',}}>
@@ -168,7 +210,7 @@ const Welcome = ({navigation, route, campaginData}) => {
                 <View style={{ margin: 15}}>
                   <View style={{flexDirection: 'row'}}>
                     <Image style={{width: 40, height: 40, margin: 'auto', borderRadius: 50, borderWidth: 2, borderColor: '#E5E7EB'}} resizeMode="cover" source={require('./../assets/img/img1.png')}/>
-                    <Text style={{fontSize: 25}}>{name} 님 </Text>
+                    <Text style={{fontSize: 25}}>{user_infolist.name} 님 </Text>
                     <View style={{position: 'absolute', top: -20, right: 0}}>
                       {LogoutButton(currentTab, setCurrentTab, "LogOut", logout, navigation, showMenu, setShowMenu, clearLogin)}
                     </View>
@@ -243,7 +285,7 @@ const Welcome = ({navigation, route, campaginData}) => {
           </View>
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 1, alignItems: 'flex-start', marginTop: 25}}>
-                <Text style={{fontSize: 30, marginLeft: 30}} welcome={true}>{name} 활동가 님,</Text>
+                <Text style={{fontSize: 30, marginLeft: 30}} welcome={true}>{user_infolist.name} 활동가 님,</Text>
                 <Text style={{fontSize: 30, marginLeft: 30}} welcome={true}>안녕하세요!</Text>
             </View>
             <View style={{flex: 0.5, alignItems: 'flex-start', marginTop: 20}}>
@@ -275,36 +317,15 @@ const Welcome = ({navigation, route, campaginData}) => {
                   {moveCamapginList(currentTab, setCurrentTab, "캠페인 전체 목록 바로 가기 >", navigation)}
                 </View>
                 <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={{flexDirection: 'row'}}>
-                  <View style={{alignItems: 'center', paddingBottom: 20}}>
-                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'gray', margin: 10}} />
-                    <Text>제주쓰담</Text>
-                    {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
-                  </View>
-                  <View style={{alignItems: 'center'}}>
-                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'gray', margin: 10}} />
-                    <Text>제주쓰담</Text>
-                    {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
-                  </View>
-                  <View style={{alignItems: 'center'}}>
-                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'gray', margin: 10}} />
-                    <Text>제주쓰담</Text>
-                    {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
-                  </View>
-                  <View style={{alignItems: 'center'}}>
-                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'gray', margin: 10}} />
-                    <Text>제주쓰담</Text>
-                    {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
-                  </View>
-                  <View style={{alignItems: 'center'}}>
-                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'gray', margin: 10}} />
-                    <Text>제주쓰담</Text>
-                    {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
-                  </View>
-                  <View style={{alignItems: 'center'}}>
-                    <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'gray', margin: 10}} />
-                    <Text>제주쓰담</Text>
-                    {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
-                  </View>
+                  {
+                    list.map((item) =>
+                    <View style={{alignItems: 'center', paddingBottom: 20}}>
+                      <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'gray', margin: 10}} />
+                      <Text>{item.campagin_name}</Text>
+                      {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
+                    </View>
+                    )
+                  }
                 </ScrollView>
             </View>
             </WelcomeContainer>

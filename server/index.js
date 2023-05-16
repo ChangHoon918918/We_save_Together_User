@@ -26,6 +26,22 @@ app.get('/', (req, res) => res.send('Hello World!~~ '))
 
 app.get('/api/hello', (req, res) => res.send('Hello World!~~ '))
 
+app.post('/api/users/updateUser', (req, res) => {
+  User.findOneAndUpdate({user_id: req.body.user_id}, {"name" : req.body.changed_name}, (err, user) => {
+    if (err) return res.json({ success: false, err })
+    return res.status(200).json({
+      success: true,
+    })
+  });
+})
+
+app.post('/api/users/getuserinfo', (req, res) => {
+  User.findOne({user_id: req.body.user_id}, (err, user) => {
+    if (err) return res.json({ success: false, err })
+    res.status(200).json({user_id: user.user_id, name: user.name, email: user.email, address: user.address, phoneNumber: user.phoneNumber })
+  });
+})
+
 app.post('/api/users/register', (req, res) => {
 
   //회원 가입 할떄 필요한 정보들을  client에서 가져오면 
@@ -37,7 +53,10 @@ app.post('/api/users/register', (req, res) => {
     return res.status(200).json({
       success: true,
       name: user.name,
-      email: user.email
+      user_id: user.user_id,
+      email: user.email,
+      address: user.address,
+      phoneNumber: user.phoneNumber
     })
   })
 })
@@ -49,11 +68,11 @@ app.post('/api/campagins/register', (req, res) => {
   campagin.save((err, campaginInfo) => {
     if (err) return res.json( { success: false, err })
     return res.status(200).json({
-      success: true,
-      name: campagin.name,
-      operatingDate: campagin.operatingDate,
-      point: campagin.point,
-      volunteerTimer: campagin.volunteerTimer
+      campagin_success: true,
+      campagin_name: campagin.campagin_name,
+      campagin_operatingDate: campagin.campagin_operatingDate,
+      campagin_point: campagin.campagin_point,
+      campagin_volunteerTimer: campagin.campagin_volunteerTimer
     })
   })
 })
@@ -73,13 +92,13 @@ app.post('/api/users/login', (req, res) => {
 
   // console.log('ping')
   //요청된 이메일을 데이터베이스에서 있는지 찾는다.
-  User.findOne({ email: req.body.email }, (err, user) => {
+  User.findOne({ user_id: req.body.user_id }, (err, user) => {
 
     // console.log('user', user)
     if (!user) {
       return res.json({
         loginSuccess: false,
-        message: "제공된 이메일에 해당하는 유저가 없습니다."
+        message: "제공된 아이디에 해당하는 유저가 없습니다."
       })
     }
 
@@ -99,7 +118,7 @@ app.post('/api/users/login', (req, res) => {
         // 토큰을 저장한다.  어디에 ?  쿠키 , 로컳스토리지 
         res.cookie("x_auth", user.token)
           .status(200)
-          .json({ loginSuccess: true, userId: user._id, name: user.name, email: user.email })
+          .json({ loginSuccess: true, userId: user._id, user_id: user.user_id, name: user.name, email: user.email, address: user.address, phoneNumber: user.phoneNumber })
       })
     })
   })

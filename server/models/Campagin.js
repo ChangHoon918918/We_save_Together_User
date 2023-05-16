@@ -5,20 +5,20 @@ const jwt = require('jsonwebtoken');
 
 
 const campaginSchema = mongoose.Schema({
-    name: {
+    campagin_name: {
         type: String,
         maxlength: 50
     },
-    operatingDate: {
+    campagin_operatingDate: {
         type: Date,
         default: moment().format("YYYY-MM-DD")
     },
-    point: {
+    campagin_point: {
         type: Number,
         default: 30
     },
     image: String,
-    volunteerTimer: {
+    campagin_volunteerTimer: {
         type: Number,
         default: 3
     }

@@ -61,12 +61,12 @@ const Login = ({navigation}) => {
         .post(url, credentials)
         .then((response) => {
             const result = response.data;
-            const {message, status, data, loginSuccess, userId, name, email} = result;
+            const {message, status, data, loginSuccess, user_id, name, email, address, phoneNumber} = result;
 
             if(loginSuccess !== true) {
                 handleMessage(message, loginSuccess);
             } else {
-                persistLogin({userId, name, email}, message, status);
+                persistLogin({user_id, address, name, email, phoneNumber}, message, status);
             }
             setSubmitting(false);
         })
@@ -104,9 +104,9 @@ const Login = ({navigation}) => {
                 <SubTitle>로그인</SubTitle>
 
                 <Formik 
-                    initialValues = {{email: '', password: ''}}
+                    initialValues = {{user_id: '', password: ''}}
                     onSubmit={(values, {setSubmitting}) => {
-                        if(values.email == '' || values.password == ''){
+                        if(values.user_id == '' || values.password == ''){
                             handleMessage('Please fill all the fileds');
                             setSubmitting(false);
                         } else {
@@ -116,13 +116,13 @@ const Login = ({navigation}) => {
                 >
                   {({handleChange, handleBlur, handleSubmit, values, isSubmitting}) => (<StyledFormArea>
                         <MyTextInput 
-                            label="이메일 주소"
-                            icon = "mail"
-                            placeholder="hn016768@gmail.com"
+                            label="ID"
+                            icon = "person"
+                            placeholder="ID"
                             placeholderTextColor = {darkLight}
-                            onChangeText={handleChange('email')}
-                            onBlur={handleBlur('email')}
-                            value={values.email}
+                            onChangeText={handleChange('user_id')}
+                            onBlur={handleBlur('user_id')}
+                            value={values.user_id}
                             keyboardType="email-address"
                         />
 

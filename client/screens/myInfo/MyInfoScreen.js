@@ -2,29 +2,59 @@
 import { Pressable, Text, View, TextInput, TouchableOpacity} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import React  from "react";
-
+import React, { useRef, useState, useContext, useEffect } from 'react';
+import { CredentialsContext } from "../../components/CredentialsContext";
 
 /**스타일 */
 import styles from "./style";
 //* 아이콘
 import { AntDesign } from '@expo/vector-icons'; 
+import{ 
+    Avatar_Edit
+} from '../../components/styles';
+
+import axios from 'axios';
 
 function Separator() {
     return <View style = {styles.separator}/>
   }
 
 export default function MyInfoScreen({ navigation }) {
+    const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
+    const {user_id, name, email, address, phoneNumber} = storedCredentials;
+    const [user_infolist, setInfoData] = useState([]);
+
+    function update_userinfo() {
+        const url = 'http://192.168.45.169:5000/api/users/getuserinfo' //(locahhost -> 로컬 와이파이 주소)
+        axios
+        .post(url,
+            {
+                "user_id" : user_id
+            }   
+        )
+        .then((response) => {
+            const result = response.data;
+            const {user_id, name, email, address, phoneNumber} = result;
+            setInfoData(result);
+            console.log(user_infolist);
+        })
+        .catch(error => {
+            console.log(user_infolist);
+        })
+      }
+    useEffect(() => {
+        update_userinfo();
+    }, []);
     return (       
         <SafeAreaView style={styles.container}> 
             <View style={styles.Box2}>
                 <TouchableOpacity 
-                    onPress={() => { navigation.pop() }}>
+                    onPress={() => { navigation.navigate('Welcome') }}>
                     <AntDesign name="leftcircleo" size={30} color="black" />
                 </TouchableOpacity>
             </View> 
 
-            <AntDesign name="meh" size={150} color="black" />
+            <Avatar_Edit resizeMode="cover" source={require('../../assets/img/img1.png')}/>
 
             <Separator/>
 
@@ -33,50 +63,35 @@ export default function MyInfoScreen({ navigation }) {
                     <View style={styles.ID}>
                         <Text style={styles.text_ID}>Name</Text>
                     </View>
-                    <TextInput
-                        style={styles.Text_input}
-                        placeholder={"  " + "이름"}
-                    />
+                    <Text style={styles.Text_input}>{user_infolist.name}</Text>
                 </View>
 
                 <View style={styles.My_view}>
                     <View style={styles.ID}>
                         <Text style={styles.text_ID}>ID</Text>
                     </View>
-                    <TextInput
-                        style={styles.Text_input}
-                        placeholder={"  " + "ID"}
-                    />
+                    <Text style={styles.Text_input}>{user_id}</Text>
                 </View>
 
                 <View style={styles.My_view}>
                     <View style={styles.ID}>
                         <Text style={styles.text_ID}>주소</Text>
                     </View>
-                    <TextInput
-                        style={styles.Text_input}
-                        placeholder={"  " + "주소"}
-                    />
+                    <Text style={styles.Text_input}>{address}</Text>
                 </View>
 
                 <View style={styles.My_view}>
                     <View style={styles.ID}>
                         <Text style={styles.text_ID}>Email</Text>
                     </View>
-                    <TextInput
-                        style={styles.Text_input}
-                        placeholder={"  " + "Email"}
-                    />
+                    <Text style={styles.Text_input}>{email}</Text>
                 </View>
                 
                 <View style={styles.My_view}>
                     <View style={styles.ID}>
                         <Text style={styles.text_ID}>Phone</Text>
                     </View>
-                    <TextInput
-                        style={styles.Text_input}
-                        placeholder={"  " + "Phone"}
-                    />
+                    <Text style={styles.Text_input}>{phoneNumber}</Text>
                 </View>               
             </View>
             

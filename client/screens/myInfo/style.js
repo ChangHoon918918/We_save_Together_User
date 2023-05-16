@@ -33,6 +33,8 @@ const styles = StyleSheet.create({
     Text_input : {
         flex : 5,
         marginLeft: 10,
+        textAlignVertical: 'center',
+        justifyContent: 'center'
     },
     Box1 : {
         marginTop: 50,    

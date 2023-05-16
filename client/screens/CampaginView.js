@@ -70,7 +70,7 @@ const CampaginView = ({ navigation, campaginData, props }) => {
     .post(url)
     .then((response) => {
         const result = response.data;
-        const {point, volunteerTimer, name, operatingDate} = result;
+        const {campagin_point, campagin_volunteerTimer, campagin_name, campagin_operatingDate} = result;
         setData(result);
         console.log(list);
     })
@@ -100,9 +100,9 @@ const CampaginView = ({ navigation, campaginData, props }) => {
           <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: windowWidth/1.2, height: windowHeight/6, margin: 10}}>
           <View style={Listlayout_styles.Listlayout_body}>
             <View>
-              <Text>봉사 시간: {item.volunteerTimer}</Text>
-              <Text style={{fontSize: 25}}>{item.name}</Text>
-              <Text style={{fontSize: 15}}>포인트: {item.point}</Text>
+              <Text>봉사 시간: {item.campagin_volunteerTimer}</Text>
+              <Text style={{fontSize: 25}}>{item.campagin_name}</Text>
+              <Text style={{fontSize: 15}}>포인트: {item.campagin_point}</Text>
             </View>
             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingLeft:20}}>
               <TouchableOpacity>
@@ -118,20 +118,20 @@ const CampaginView = ({ navigation, campaginData, props }) => {
     )
   }
 
-  const Item = ({operatingDate, point, name, volunteerTimer}) => (
+  const Item = ({operatingDate, campagin_point, campagin_name, campagin_volunteerTimer}) => (
 
     <View style={{width: windowWidth/2.3, height: windowHeight/4, marginTop: 10}}>
     <View style={Girdlayout_styles.Girdlayout_body}>
     <View style={{alignItems: 'center', justifyContent: 'center'}}>
-      <Text>봉사시간: {volunteerTimer}</Text>
+      <Text>봉사시간: {campagin_volunteerTimer}</Text>
     </View>
     
     <View style={{alignItems: 'center', justifyContent: 'center'}}>
-      <Text style={{fontSize: 30}}>{name}</Text>
+      <Text style={{fontSize: 30}}>{campagin_name}</Text>
     </View>
   
     <View style={{alignItems: 'center', justifyContent: 'center'}}>
-      <Text style={{fontSize: 13}}>포인트: {point}</Text>
+      <Text style={{fontSize: 13}}>포인트: {campagin_point}</Text>
     </View>
   
     <View style={{alignItems: 'flex-end', marginTop: 30}}>
@@ -149,7 +149,7 @@ const CampaginView = ({ navigation, campaginData, props }) => {
         <View style={{paddingHorizontal: windowWidth/20}}>
           <FlatList
             data={list}
-            renderItem={({item}) => <Item operatingDate={item.operatingDate} name={item.name} point={item.point} volunteerTimer={item.volunteerTimer}/>}
+            renderItem={({item}) => <Item campagin_operatingDate={item.campagin_operatingDate} campagin_name={item.campagin_name} campagin_point={item.campagin_point} campagin_volunteerTimer={item.campagin_volunteerTimer}/>}
             keyExtractor={(item, index) => index}
             numColumns={2}
           />
@@ -167,9 +167,9 @@ const CampaginView = ({ navigation, campaginData, props }) => {
           <View style={DetailLayout_styles.DetailLayout_body}>
             <View style={{flexDirection:'row'}}>
               <View>
-                <Text>봉사 시간: {item.volunteerTimer}</Text>
-                <Text style={{fontSize: 25}}>{item.name}</Text>
-                <Text style={{fontSize: 15}}>포인트: {item.point}</Text>
+                <Text>봉사 시간: {item.campagin_volunteerTimer}</Text>
+                <Text style={{fontSize: 25}}>{item.campagin_name}</Text>
+                <Text style={{fontSize: 15}}>포인트: {item.campagin_point}</Text>
               </View>
               <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingLeft:20}}>
                 <TouchableOpacity>

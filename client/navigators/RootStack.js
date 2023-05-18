@@ -48,6 +48,8 @@ const RootStack = () => {
                 <>
                 <Stack.Screen options={{headerShown: false}} name="Welcome" component={Welcome}/>
                 <Stack.Screen name="CampaginView" component={CampaginView}/>
+                <Stack.Screen options={{headerShown: true}} name="Feed" component={Feed}/>
+                <Stack.Screen options={{headerShown: true}} name="Search" component={Search}/>
                 <Stack.Screen options={{headerShown: true}} name="Notice" component={Notice}/>
                 <Stack.Screen options={{headerShown: true}} name="TimeStampCamera" component={TimeStampCamera}/>
                 <Stack.Screen options={{headerShown: false}} name="InformationScreen" component={InformationScreen}/>

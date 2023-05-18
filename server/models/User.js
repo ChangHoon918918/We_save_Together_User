@@ -47,6 +47,30 @@ const userSchema = mongoose.Schema({
     },
     phoneNumber: {
         type: String
+    },
+    havingPoint: {
+        type: Number,
+        default: 0
+    },
+    havingVolunteerTime: {
+        type: Number,
+        default: 0
+    },
+    doingCampagins: {
+        type: Number,
+        default: 0
+    },
+    completeCampagins: {
+        type: Number,
+        default: 0
+    },
+    avatar_name : {
+        type: String,
+    },
+    avatar_image: {
+        data:Buffer,
+        type: String,
+        default: null
     }
 })
 

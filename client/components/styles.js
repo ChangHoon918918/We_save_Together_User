@@ -86,6 +86,21 @@ export const Poster_PV = styled.Image`
     margin-top: 15px;
 `;
 
+export const PosterList_PV = styled.Image`
+    width: ${windowWidth/3};
+    height: ${windowHeight/4};
+    margin: 10px;
+    border-radius: 15px;
+    border-width: 2px;
+    border-color: ${secondary};
+    margin-bottom: 10px;
+    margin-top: 15px;
+`;
+
+export const AdView = styled.Image`
+    height: ${windowHeight/7};
+`;
+
 export const WelcomeImage = styled.Image`
     height: 50%;
     min-width: 100%;

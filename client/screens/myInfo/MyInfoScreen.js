@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import React, { useRef, useState, useContext, useEffect } from 'react';
 import { CredentialsContext } from "../../components/CredentialsContext";
+import MyProfileImage from '../../components/MyProfileImage';
 
 /**스타일 */
 import styles from "./style";
@@ -21,8 +22,9 @@ function Separator() {
 
 export default function MyInfoScreen({ navigation }) {
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
-    const {user_id, name, email, address, phoneNumber} = storedCredentials;
+    const {user_id, name, email, address, phoneNumber, profileImage} = storedCredentials;
     const [user_infolist, setInfoData] = useState([]);
+    const [photo,  setPhoto] = useState(undefined);
 
     function update_userinfo() {
         const url = 'http://192.168.45.169:5000/api/users/getuserinfo' //(locahhost -> 로컬 와이파이 주소)
@@ -34,7 +36,7 @@ export default function MyInfoScreen({ navigation }) {
         )
         .then((response) => {
             const result = response.data;
-            const {user_id, name, email, address, phoneNumber} = result;
+            const {user_id, name, email, address, phoneNumber, avatar_image} = result;
             setInfoData(result);
             console.log(user_infolist);
         })
@@ -54,7 +56,7 @@ export default function MyInfoScreen({ navigation }) {
                 </TouchableOpacity>
             </View> 
 
-            <Avatar_Edit resizeMode="cover" source={require('../../assets/img/img1.png')}/>
+            <MyProfileImage url={user_infolist.avatar_image} onChangePhoto={setPhoto}/>
 
             <Separator/>
 
@@ -77,21 +79,21 @@ export default function MyInfoScreen({ navigation }) {
                     <View style={styles.ID}>
                         <Text style={styles.text_ID}>주소</Text>
                     </View>
-                    <Text style={styles.Text_input}>{address}</Text>
+                    <Text style={styles.Text_input}>{user_infolist.address}</Text>
                 </View>
 
                 <View style={styles.My_view}>
                     <View style={styles.ID}>
                         <Text style={styles.text_ID}>Email</Text>
                     </View>
-                    <Text style={styles.Text_input}>{email}</Text>
+                    <Text style={styles.Text_input}>{user_infolist.email}</Text>
                 </View>
                 
                 <View style={styles.My_view}>
                     <View style={styles.ID}>
                         <Text style={styles.text_ID}>Phone</Text>
                     </View>
-                    <Text style={styles.Text_input}>{phoneNumber}</Text>
+                    <Text style={styles.Text_input}>{user_infolist.phoneNumber}</Text>
                 </View>               
             </View>
             

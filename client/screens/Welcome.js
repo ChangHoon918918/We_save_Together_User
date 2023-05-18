@@ -46,7 +46,9 @@ import{
     Line,
     WelcomeContainer,
     WelcomeImage,
-    Avatar
+    Avatar,
+    PosterList_PV,
+    AdView
 } from './../components/styles';
 import Feed from './Feed';
 import Article from './Article';
@@ -293,7 +295,7 @@ const Welcome = ({navigation, campaginData}) => {
             </View>
           </View>
           <View style={{backgroundColor: 'gray', height: windowHeight/7}}>
-
+            <AdView resizeMode="cover" source={require('./../assets/img/AdEx.png')}/>
             <View style={{position:'absolute', width: 50, height: 30, borderRadius: 10, backgroundColor: '#D9D9D9', top: 0, left: 0, alignItems: 'center', justifyContent: 'center', margin: 10}}>
               <Text style={{fontSize:20}}>ad</Text>
             </View>
@@ -305,9 +307,9 @@ const Welcome = ({navigation, campaginData}) => {
                   <View style={{flexDirection: 'row'}}>
                     <Image source={camapginCount} style={{width: 52, height: 52}}></Image>
                     <View>
-                      <Text style={{fontWeight:'bold', fontSize: 17}}>진행 중인 캠페인 횟수는 총 2회입니다.</Text>
-                      <Text>진행 중 2회 | 진행 완료 1회 | 진행 가능 : 120개</Text>
-                      <Text style={{marginTop: 10}}>포인트: 3,383점   총 봉사 시간 : 468시간</Text>
+                      <Text style={{fontWeight:'bold', fontSize: 17}}>진행 중인 캠페인 횟수는 총 {user_infolist.doingCampagins}회입니다.</Text>
+                      <Text>진행 중 {user_infolist.doingCampagins}회 | 진행 완료 {user_infolist.completeCampagins}회 | 진행 가능 : {list.length}개</Text>
+                      <Text style={{marginTop: 10}}>포인트: {user_infolist.havingPoint}점   총 봉사 시간 : {user_infolist.havingVolunteerTime}시간</Text>
                     </View>
                   </View>
                 </View>
@@ -320,7 +322,7 @@ const Welcome = ({navigation, campaginData}) => {
                   {
                     list.map((item) =>
                     <View style={{alignItems: 'center', paddingBottom: 20}}>
-                      <View style={{width: windowWidth/3, height: windowHeight/4, borderRadius: 15, backgroundColor: 'gray', margin: 10}} />
+                      <PosterList_PV resizeMode="cover" source={require('./../assets/img/img1.png')}/>
                       <Text>{item.campagin_name}</Text>
                       {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
                     </View>

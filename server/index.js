@@ -6,6 +6,8 @@ const config = require('./config/key');
 const { auth } = require('./middleware/auth');
 const { User } = require("./models/User");
 const { Campagin } = require("./models/Campagin");
+const ImageModel = require('./models/ImageSchema');
+const multer = require('multer');
 const router = express.Router();
 
 //application/x-www-form-urlencoded 
@@ -21,13 +23,45 @@ mongoose.connect(config.mongoURI, {
 }).then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err))
 
+//storage
+const Storage = multer.diskStorage({
+  destination: "uploads",
+  filename:(req, file, cb)=>{
+    cb(null, file.originalname)
+  }
+});
+
+const upload = multer({
+  storage: Storage
+}).single('testImage')
+
+app.post('/upload', (req, res)=>{
+  upload(req, res, (err)=>{
+    if(err){
+      console.log(err)
+    }
+    else{
+      const newImage = new ImageModel({
+        name: req.body.name,
+        image: {
+          data: req.file.filename,
+          contentType: 'image/jpg'
+        }
+      })
+      newImage
+      .save()
+      .then(()=>res.send('successfully uploaded'))
+      .catch(err=>console.log(err))
+    }
+  })
+})
 
 app.get('/', (req, res) => res.send('Hello World!~~ '))
 
 app.get('/api/hello', (req, res) => res.send('Hello World!~~ '))
 
 app.post('/api/users/updateUser', (req, res) => {
-  User.findOneAndUpdate({user_id: req.body.user_id}, {"name" : req.body.changed_name}, (err, user) => {
+  User.findOneAndUpdate({user_id: req.body.user_id}, {"name" : req.body.changed_name, "address" : req.body.changed_address, "email" : req.body.changed_email, "phoneNumber" : req.body.changed_phoneNumber, "avatar_image": req.body.imageData}, (err, user) => {
     if (err) return res.json({ success: false, err })
     return res.status(200).json({
       success: true,
@@ -38,7 +72,19 @@ app.post('/api/users/updateUser', (req, res) => {
 app.post('/api/users/getuserinfo', (req, res) => {
   User.findOne({user_id: req.body.user_id}, (err, user) => {
     if (err) return res.json({ success: false, err })
-    res.status(200).json({user_id: user.user_id, name: user.name, email: user.email, address: user.address, phoneNumber: user.phoneNumber })
+    res.status(200).json(
+      {
+        user_id: user.user_id, 
+        name: user.name, 
+        email: user.email, 
+        address: user.address, 
+        phoneNumber: user.phoneNumber, 
+        havingPoint: user.havingPoint, 
+        havingVolunteerTime: user.havingVolunteerTime,
+        doingCampagins: user.doingCampagins,
+        completeCampagins: user.completeCampagins,
+        avatar_image: user.avatar_image
+      })
   });
 })
 

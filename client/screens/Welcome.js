@@ -291,7 +291,7 @@ const Welcome = ({navigation, campaginData}) => {
                 <Text style={{fontSize: 30, marginLeft: 30}} welcome={true}>안녕하세요!</Text>
             </View>
             <View style={{flex: 0.5, alignItems: 'flex-start', marginTop: 20}}>
-                <Avatar resizeMode="cover" source={require('./../assets/img/img1.png')}/>
+                <Avatar resizeMode="cover" source={{uri: `http://192.168.45.169:5000/${user_id}.jpg?date=` + new Date().toLocaleString()}}/>
             </View>
           </View>
           <View style={{backgroundColor: 'gray', height: windowHeight/7}}>

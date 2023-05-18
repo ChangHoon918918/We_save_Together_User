@@ -12,6 +12,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //credentials context
 import { CredentialsContext } from './components/CredentialsContext';
 
+//apk build
+//npm install -g eas-cli
+//eas build:configure
+//eas build -p android --profile preview
 
 export default function App() {
   const [appReady, setAppReady] = useState(false);

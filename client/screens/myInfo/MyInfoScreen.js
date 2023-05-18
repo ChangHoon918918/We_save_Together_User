@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useRef, useState, useContext, useEffect } from 'react';
 import { CredentialsContext } from "../../components/CredentialsContext";
 import MyProfileImage from '../../components/MyProfileImage';
+import shop from '../../assets/img/shop.png';
 
 /**스타일 */
 import styles from "./style";
@@ -25,9 +26,14 @@ export default function MyInfoScreen({ navigation }) {
     const {user_id, name, email, address, phoneNumber, profileImage} = storedCredentials;
     const [user_infolist, setInfoData] = useState([]);
     const [photo,  setPhoto] = useState(undefined);
+    const [userProfileImage, setUserProfileImage] = useState({});
+    const imageurl = `http://192.168.45.169:5000/${user_id}.jpg?date=` + new Date().toLocaleString();
+    const [imageURI, setImageURI] = useState("http://192.168.45.169:5000/testImage.jpg");
 
     function update_userinfo() {
         const url = 'http://192.168.45.169:5000/api/users/getuserinfo' //(locahhost -> 로컬 와이파이 주소)
+        setImageURI(imageurl);
+        
         axios
         .post(url,
             {
@@ -38,6 +44,7 @@ export default function MyInfoScreen({ navigation }) {
             const result = response.data;
             const {user_id, name, email, address, phoneNumber, avatar_image} = result;
             setInfoData(result);
+            console.log(result);
             console.log(user_infolist);
         })
         .catch(error => {
@@ -46,17 +53,18 @@ export default function MyInfoScreen({ navigation }) {
       }
     useEffect(() => {
         update_userinfo();
-    }, []);
+        update_userinfo();
+    },[]);
     return (       
         <SafeAreaView style={styles.container}> 
             <View style={styles.Box2}>
                 <TouchableOpacity 
-                    onPress={() => { navigation.navigate('Welcome') }}>
+                    onPress={() => { navigation.reset({routes: [{name: 'Welcome'}]}) }}>
                     <AntDesign name="leftcircleo" size={30} color="black" />
                 </TouchableOpacity>
             </View> 
 
-            <MyProfileImage url={user_infolist.avatar_image} onChangePhoto={setPhoto}/>
+            <Avatar_Edit source={{uri : imageURI}} />
 
             <Separator/>
 

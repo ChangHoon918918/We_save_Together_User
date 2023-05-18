@@ -31,33 +31,39 @@ export default function UpdateMyInfoScreen({ navigation }) {
     const [changed_address, setChangeAddress] = useState("");
     const [changed_email, setChangeEmail] = useState("");
     const [changed_phoneNumber, setChangephoneNumber] = useState("");
-    const [avatar_image,  setPhoto] = useState(undefined);
+    const [avatar_image,  setPhoto] = useState(`http://192.168.45.169:5000/${user_id}.jpg?date=` + new Date().toLocaleString());
+
+
     function update() {
         const url = 'http://192.168.45.169:5000/api/users/updateUser' //(locahhost -> 로컬 와이파이 주소)
         const formData = new FormData();
         const file = {
+            uri: avatar_image,
+            type: 'image/jpeg',
+            name: `${user_id}.jpg`
+        }
+        const headers = {
+            "content-type": "multipart/form-data"
+        };
+        if(changed_name == '' || changed_address == '' || changed_email == '' || changed_phoneNumber == ''){
 
         }
-        formData.append('avatar_image', avatar_image);
-        axios
-        .post(url, 
-            {
-                "user_id" : user_id,
-                "changed_name" : changed_name,
-                "changed_address" : changed_address,
-                "changed_email" : changed_email,
-                "changed_phoneNumber" : changed_phoneNumber,
-                "changed_img" : formData,
-                "headers" : { 'Content-type': 'multipart/form-data'},
-                "imageData" : avatar_image
-            }        
-        )
-        .then((response) => {
-
-        })
-        .catch(error => {
-
-        })
+        else{
+            formData.append("user_id", user_id);
+            formData.append("changed_name", changed_name);
+            formData.append("changed_address", changed_address);
+            formData.append("changed_email", changed_email);
+            formData.append("changed_phoneNumber", changed_phoneNumber);
+            formData.append("testImage", file);
+            formData.append("name", "testProfile");
+            axios.post(url, formData, {headers: headers} )
+            .then((response) => {
+                console.log(response.data)
+            })
+            .catch(error => {
+    
+            })
+        }
       }
 
     return (       

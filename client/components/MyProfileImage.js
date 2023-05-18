@@ -18,6 +18,7 @@ const MyProfileImage = ({ url, onChangePhoto }) => {
       aspect: [1, 1],
       quality: 1,
     });
+    
  
     // cancelled가 아닐 때 가져온 사진의 주소로 onChangePhoto
     if (!result.canceled) {

@@ -4,6 +4,7 @@ import React, {useState, useContext} from 'react';
 // API client
 import axios from 'axios';
 import { CredentialsContext2 } from './CredentialsContext2';
+const server_url = 'http://192.168.45.152';
 
 const TabButton = (currentTab, setCurrentTab, title, image, navigation, windowWidth) => {
     const [campaginData, setData] = useState();
@@ -17,7 +18,7 @@ const TabButton = (currentTab, setCurrentTab, title, image, navigation, windowWi
             {navigation.navigate('Login')}
         }
         else if(title == "전체 캠페인"){
-          const url = 'http://192.168.45.169:5000/api/campagins/getinfo' //(locahhost -> 로컬 와이파이 주소)
+          const url = `${server_url}:5000/api/campagins/getinfo` //(locahhost -> 로컬 와이파이 주소)
           // axios
           // .post(url)
           // .then((response) => {

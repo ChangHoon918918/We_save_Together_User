@@ -36,34 +36,34 @@ const upload = multer({
   storage: Storage
 }).single('testImage')
 
-app.post('/upload', (req, res)=>{
-  upload(req, res, (err)=>{
-    if(err){
-      console.log(err)
-    }
-    else{
-      const newImage = new ImageModel({
-        name: req.body.name,
-        image: {
-          data: req.file.filename,
-          contentType: 'image/jpg'
-        }
-      })
-      newImage
-      .save()
-      .then(()=>
-      res.send('successfully uploaded'),
-      console.log(req.file),
-      console.log(req.body)
-      )
-      .catch(err=>console.log(err))
-    }
-  })
-})
+// app.post('/upload', (req, res)=>{
+//   upload(req, res, (err)=>{
+//     if(err){
+//       console.log(err)
+//     }
+//     else{
+//       const newImage = new ImageModel({
+//         name: req.body.name,
+//         image: {
+//           data: req.file.filename,
+//           contentType: 'image/jpg'
+//         }
+//       })
+//       newImage
+//       .save()
+//       .then(()=>
+//       res.send('successfully uploaded'),
+//       console.log(req.file),
+//       console.log(req.body)
+//       )
+//       .catch(err=>console.log(err))
+//     }
+//   })
+// })
 
-app.get('/', (req, res) => res.send('Hello World!~~ '))
+// app.get('/', (req, res) => res.send('Hello World!~~ '))
 
-app.get('/api/hello', (req, res) => res.send('Hello World!~~ '))
+// app.get('/api/hello', (req, res) => res.send('Hello World!~~ '))
 
 app.post('/api/users/updateUser', (req, res) => {
   upload(req, res, (err)=>{
@@ -71,17 +71,23 @@ app.post('/api/users/updateUser', (req, res) => {
       console.log(err)
     }
     else{
-      const newImage = new ImageModel({
-        name: req.body.name,
-        image: {
-          data: req.file.filename,
-          contentType: 'image/jpg'
-        }
-      })
-      User.findOneAndUpdate({user_id: req.body.user_id}, {"name" : req.body.changed_name, "address" : req.body.changed_address, "email" : req.body.changed_email, "phoneNumber" : req.body.changed_phoneNumber, "avatar_image": {data: req.file.filename, contentType: 'image/jpg'}}, (err, user) => {
+      User.findOneAndUpdate(
+        {user_id: req.body.user_id}, 
+        {
+          "name" : req.body.changed_name, 
+          "address" : req.body.changed_address, 
+          "email" : req.body.changed_email, 
+          "phoneNumber" : req.body.changed_phoneNumber, 
+          "avatar_image": {data: req.file.filename, contentType: 'image/jpg'}
+        }, (err, user) => {
         if (err) return res.json({ success: false, err })
         return res.status(200).json({
           success: true,
+          user_id: req.body.user_id,
+          name : req.body.changed_name, 
+          address : req.body.changed_address, 
+          email : req.body.changed_email, 
+          phoneNumber : req.body.changed_phoneNumber, 
         })
       });
     }

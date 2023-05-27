@@ -16,6 +16,7 @@ import{
 } from '../../components/styles';
 
 import axios from 'axios';
+const server_url = 'http://192.168.45.152';
 
 function Separator() {
     return <View style = {styles.separator}/>
@@ -27,11 +28,16 @@ export default function MyInfoScreen({ navigation }) {
     const [user_infolist, setInfoData] = useState([]);
     const [photo,  setPhoto] = useState(undefined);
     const [userProfileImage, setUserProfileImage] = useState({});
-    const imageurl = `http://192.168.45.169:5000/${user_id}.jpg?date=` + new Date().toLocaleString();
-    const [imageURI, setImageURI] = useState("http://192.168.45.169:5000/testImage.jpg");
+    const imageurl = `${server_url}:5000/${user_id}.jpg?date=` + new Date().toLocaleString();
+    const [imageURI, setImageURI] = useState(`${server_url}:5000/blankProfile.jpg`);
+    const [imageError, setImageError] = useState(true);
+ 
+    const onImageNotFound = () => {
+      setImageError(false);
+    }
 
     function update_userinfo() {
-        const url = 'http://192.168.45.169:5000/api/users/getuserinfo' //(locahhost -> 로컬 와이파이 주소)
+        const url = `${server_url}:5000/api/users/getuserinfo` //(locahhost -> 로컬 와이파이 주소)
         setImageURI(imageurl);
         
         axios
@@ -50,11 +56,12 @@ export default function MyInfoScreen({ navigation }) {
         .catch(error => {
             console.log(user_infolist);
         })
-      }
-    useEffect(() => {
-        update_userinfo();
-        update_userinfo();
-    },[]);
+    }
+
+    useEffect(()=>{
+        let timer = setTimeout(()=>{ update_userinfo() }, 2000);
+    }, []);
+
     return (       
         <SafeAreaView style={styles.container}> 
             <View style={styles.Box2}>
@@ -64,7 +71,8 @@ export default function MyInfoScreen({ navigation }) {
                 </TouchableOpacity>
             </View> 
 
-            <Avatar_Edit source={{uri : imageURI}} />
+            <Avatar_Edit source={{ uri: imageURI }}
+                onError={() => onImageNotFound()} />
 
             <Separator/>
 

@@ -63,6 +63,7 @@ import JoinButton from '../components/JoinButton';
 const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+const server_url = 'http://192.168.45.152';
 
 // async-storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -86,9 +87,10 @@ const Welcome = ({navigation, campaginData}) => {
     const [animatedViewRadius, setAnimatedViewRadius] = useState(0);
     const [list, setData] = useState([]);
     const [user_infolist, setInfoData] = useState([]);
+    const [prof_img, setProfImg] = useState(notifications);
 
     function post() {
-      const url = 'http://192.168.45.169:5000/api/campagins/getinfo' //(locahhost -> 로컬 와이파이 주소)
+      const url = `${server_url}:5000/api/campagins/getinfo` //(locahhost -> 로컬 와이파이 주소)
       axios
       .post(url)
       .then((response) => {
@@ -139,7 +141,7 @@ const Welcome = ({navigation, campaginData}) => {
     }
 
     function update_userinfo() {
-      const url = 'http://192.168.45.169:5000/api/users/getuserinfo' //(locahhost -> 로컬 와이파이 주소)
+      const url = `${server_url}:5000/api/users/getuserinfo` //(locahhost -> 로컬 와이파이 주소)
       axios
       .post(url,
           {
@@ -291,7 +293,8 @@ const Welcome = ({navigation, campaginData}) => {
                 <Text style={{fontSize: 30, marginLeft: 30}} welcome={true}>안녕하세요!</Text>
             </View>
             <View style={{flex: 0.5, alignItems: 'flex-start', marginTop: 20}}>
-                <Avatar resizeMode="cover" source={{uri: `http://192.168.45.169:5000/${user_id}.jpg?date=` + new Date().toLocaleString()}}/>
+                <Avatar resizeMode="cover" source={
+                  {uri: `${server_url}:5000/${user_id}.jpg?date=` + new Date().toLocaleString()}}/>
             </View>
           </View>
           <View style={{backgroundColor: 'gray', height: windowHeight/7}}>
@@ -320,9 +323,9 @@ const Welcome = ({navigation, campaginData}) => {
                 </View>
                 <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={{flexDirection: 'row'}}>
                   {
-                    list.map((item) =>
+                    list.map((item, index) =>
                     <View style={{alignItems: 'center', paddingBottom: 20}}>
-                      <PosterList_PV resizeMode="cover" source={require('./../assets/img/img1.png')}/>
+                      <PosterList_PV resizeMode="cover" source={{ uri: `${server_url}:5000/CampaginNum${index}.jpg?date=` + new Date().toLocaleString() }}/>
                       <Text>{item.campagin_name}</Text>
                       {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
                     </View>

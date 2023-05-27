@@ -68,38 +68,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //credentials context
 import { CredentialsContext } from '../components/CredentialsContext';
+const server_url = 'http://192.168.45.152';
 
-const tabs = 
-[
+const data_init = [
   {
-    title: "ESG 용기내 챌린지", 
-    date: "2023-05-01", 
-    time: "2022.12.30 ~ 2023.01.30"
-  }, 
-  {
-    title: "제주 쓰담", 
-    date: "2023-05-03", 
-    time: "10:00 ~ 15:00"
-  },
-  {
-    title: "줍깅 캠페인", 
-    date: "2023-05-08", 
-    time: "11:00 ~ 17:00"
-  },
+    name: 'ListInfo',
+    status: 'List'
+  }
 ];
 
-const listTab = [
+const data = [
   {
+    name: 'ListInfo',
     status: 'List'
   },
-  {
-    status: 'Grid'
-  },
-  {
-    status: 'Deatil'
-  }
-]
-const data = [
   {
     name: 'DeatilInfo',
     status: 'Deatil'
@@ -112,7 +94,7 @@ const data = [
 
 const CampaginView = ({ navigation, campaginData, props }) => {
   const [status, setStatus] = useState('List')
-  const [datalist, setDatalist] = useState(data)
+  const [datalist, setDatalist] = useState(data_init)
   const [list, setData] = useState([]);
   //context
   const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
@@ -128,7 +110,7 @@ const CampaginView = ({ navigation, campaginData, props }) => {
   const [user_infolist, setInfoData] = useState([]);
 
   function post() {
-    const url = 'http://192.168.45.169:5000/api/campagins/getinfo' //(locahhost -> 로컬 와이파이 주소)
+    const url = `${server_url}:5000/api/campagins/getinfo` //(locahhost -> 로컬 와이파이 주소)
     axios
     .post(url)
     .then((response) => {
@@ -146,7 +128,7 @@ const CampaginView = ({ navigation, campaginData, props }) => {
   }, []);
   
   const setStatusFilter = status => {
-    if(status !== 'List'){
+    if(status !== 'No'){
       setDatalist([...data.filter(e => e.status === status)])
     }else{
       setDatalist(data)
@@ -164,7 +146,7 @@ const CampaginView = ({ navigation, campaginData, props }) => {
   }
 
   function update_userinfo() {
-    const url = 'http://192.168.45.169:5000/api/users/getuserinfo' //(locahhost -> 로컬 와이파이 주소)
+    const url = `${server_url}:5000/api/users/getuserinfo` //(locahhost -> 로컬 와이파이 주소)
     axios
     .post(url,
         {
@@ -221,7 +203,7 @@ const CampaginView = ({ navigation, campaginData, props }) => {
           list.map((item)=>
           <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: windowWidth/1.2, height: windowHeight/6, margin: 10}}>
           <View style={Listlayout_styles.Listlayout_body}>
-            <View>
+            <View style={{flex: 5}}>
               <Text>봉사 시간: {item.campagin_volunteerTimer}</Text>
               <Text style={{fontSize: 25}}>{item.campagin_name}</Text>
               <Text style={{fontSize: 15}}>포인트: {item.campagin_point}</Text>
@@ -244,19 +226,19 @@ const CampaginView = ({ navigation, campaginData, props }) => {
 
     <View style={{width: windowWidth/2.3, height: windowHeight/4, marginTop: 10}}>
     <View style={Girdlayout_styles.Girdlayout_body}>
-    <View style={{alignItems: 'center', justifyContent: 'center'}}>
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>봉사시간: {campagin_volunteerTimer}</Text>
     </View>
     
-    <View style={{alignItems: 'center', justifyContent: 'center'}}>
-      <Text style={{fontSize: 30}}>{campagin_name}</Text>
+    <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
+      <Text style={{fontSize: 25}}>{campagin_name}</Text>
     </View>
   
-    <View style={{alignItems: 'center', justifyContent: 'center'}}>
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text style={{fontSize: 13}}>포인트: {campagin_point}</Text>
     </View>
   
-    <View style={{alignItems: 'flex-end', marginTop: 30}}>
+    <View style={{flex: 1, alignItems: 'flex-end', marginTop: 30}}>
     <TouchableOpacity>
         <Text style={{fontSize: 20}}>보기</Text>
       </TouchableOpacity>
@@ -268,7 +250,7 @@ const CampaginView = ({ navigation, campaginData, props }) => {
   const GridLayout = () => {
     return (
       <ScrollView style={{marginTop: 10}}>
-        <View style={{paddingHorizontal: windowWidth/20}}>
+        <View style={{paddingHorizontal: windowWidth/20, height: windowHeight}}>
           <FlatList
             data={list}
             renderItem={({item}) => <Item campagin_operatingDate={item.campagin_operatingDate} campagin_name={item.campagin_name} campagin_point={item.campagin_point} campagin_volunteerTimer={item.campagin_volunteerTimer}/>}
@@ -284,22 +266,22 @@ const CampaginView = ({ navigation, campaginData, props }) => {
     return (
       <ScrollView>
         {
-          list.map((item)=> 
+          list.map((item, index)=> 
           <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: windowWidth/1.2, height: windowHeight/1.5, margin: 10}}>
           <View style={DetailLayout_styles.DetailLayout_body}>
             <View style={{flexDirection:'row'}}>
-              <View>
+              <View style={{flex: 5}}>
                 <Text>봉사 시간: {item.campagin_volunteerTimer}</Text>
                 <Text style={{fontSize: 25}}>{item.campagin_name}</Text>
                 <Text style={{fontSize: 15}}>포인트: {item.campagin_point}</Text>
               </View>
               <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingLeft:20}}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('MainTextView')}>
                   <Text style={{fontSize: 20}}>보기</Text>
                 </TouchableOpacity>
               </View>
             </View>
-            <Poster_PV resizeMode="cover" source={require('./../assets/img/img1.png')}/>
+            <Poster_PV resizeMode="cover" source={{ uri: `${server_url}:5000/CampaginNum${index}.jpg?date=` + new Date().toLocaleString() }}/>
           </View>
         </View>
           )

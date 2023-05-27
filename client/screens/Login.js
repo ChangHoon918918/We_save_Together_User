@@ -45,6 +45,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //credentials context
 import { CredentialsContext } from '../components/CredentialsContext';
+const server_url = 'http://192.168.45.152';
 
 const Login = ({navigation}) => {
     const [hidePassword, setHidePassword] = useState(true);
@@ -56,7 +57,7 @@ const Login = ({navigation}) => {
 
     const handlerLogin = (credentials, setSubmitting) => {
         handleMessage(null);
-        const url = 'http://192.168.45.169:5000/api/users/login' //(locahhost -> 로컬 와이파이 주소)
+        const url = `${server_url}:5000/api/users/login` //(locahhost -> 로컬 와이파이 주소)
         axios
         .post(url, credentials)
         .then((response) => {

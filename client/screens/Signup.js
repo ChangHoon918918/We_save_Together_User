@@ -30,7 +30,7 @@ import{
 } from './../components/styles';
 import {View, TouchableOpacity, ActivityIndicator} from 'react-native';
 
-
+import img2 from './../assets/img/myQnA.png';
 //Colors
 const {brand, darkLight, primary} = Colors;
 
@@ -48,6 +48,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //credentials context
 import { CredentialsContext } from '../components/CredentialsContext';
+const server_url = 'http://192.168.45.152';
 
 const Signup = ({navigation}) => {
     const [hidePassword, setHidePassword] = useState(true);
@@ -56,6 +57,9 @@ const Signup = ({navigation}) => {
 
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
+
+    const [newUserID, setNewUserID] = useState("");
+    const [user_infolist, setInfoData] = useState([]);
 
     //context
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
@@ -77,18 +81,43 @@ const Signup = ({navigation}) => {
     // form handling
     const handleSignup = (credentials, setSubmitting) => {
         handleMessage(null);
-        const url = 'http://192.168.45.169:5000/api/users/register' //(locahhost -> 로컬 와이파이 주소)
+        const url = `${server_url}:5000/api/users/register` //(locahhost -> 로컬 와이파이 주소)
         axios
         .post(url, credentials)
         .then((response) => {
             const result = response.data;
             const {message, status, data, success, user_id, name, email, address, phoneNumber} = result;
+            setInfoData(result);
 
             if(success !== true) {
                 handleMessage(message, loginSuccess);
             } else {
                 persistLogin({user_id, name, email, address, phoneNumber}, message, status);
             }
+            const url2 = `${server_url}:5000/api/users/updateUser` //(locahhost -> 로컬 와이파이 주소)
+            const formData = new FormData();
+            const file = {
+                uri: `${server_url}:5000/blankProfile.jpg`,
+                type: 'image/jpeg',
+                name: `${user_id}.jpg`
+            }
+            const headers = {
+                "content-type": "multipart/form-data"
+            };
+            formData.append("user_id", user_id);
+            formData.append("changed_name", name);
+            formData.append("changed_address", address);
+            formData.append("changed_email", email);
+            formData.append("changed_phoneNumber", phoneNumber);
+            formData.append("testImage", file);
+            formData.append("name", "testProfile");
+            axios.post(url2, formData, {headers: headers} )
+            .then((response) => {
+                console.log(response.data)
+            })
+            .catch(error => {
+    
+            })
             setSubmitting(false);
         })
         .catch(error => {
@@ -96,6 +125,7 @@ const Signup = ({navigation}) => {
             setSubmitting(false);
             handleMessage("An error occured. Check your network and try again");
         })
+
     }
 
     const handleMessage = (message, type = 'FAILED') =>{
@@ -114,6 +144,29 @@ const Signup = ({navigation}) => {
             handleMessage('Persisting login failed');
         })
     }
+
+    const MyTextInput = ({label, icon, isPassword, hidePassword, setHidePassword, isDate, showDatePicker, isID, ...props}) => {
+        return (<View>
+                <LeftIcon>
+                    <Octicons name={icon} size={30} color={brand}/>
+                </LeftIcon>
+                <StyledInputLabel>{label}</StyledInputLabel>
+                {!isDate && !isID && <StyledTextInput {...props} />}
+                {isID && (
+                    <StyledTextInput {...props} />
+                )}
+                {isDate && (
+                    <TouchableOpacity onPress={showDatePicker}>
+                        <StyledTextInput {...props} />
+                    </TouchableOpacity>
+                )}
+                {isPassword && (
+                    <RightIcon onPress={() => setHidePassword(!hidePassword)}>
+                        <Ionicons name={hidePassword ? 'md-eye-off' : 'md-eye'} size={30} color={darkLight}/>
+                    </RightIcon>
+                )}
+            </View>);
+    };
 
     return (
         <KeyboardAvoidingWrapper>
@@ -146,6 +199,8 @@ const Signup = ({navigation}) => {
                             setSubmitting(false);
                         }
                         else {
+                            console.log(values.user_id);
+                            console.log(newUserID);
                             handleSignup(values, setSubmitting);
                         }
                     }}
@@ -169,6 +224,7 @@ const Signup = ({navigation}) => {
                             onChangeText={handleChange('user_id')}
                             onBlur={handleBlur('user_id')}
                             value={values.user_id}
+                            isID={true}
                         />
 
                         <MyTextInput 
@@ -273,24 +329,5 @@ const Signup = ({navigation}) => {
     );
 };
 
-const MyTextInput = ({label, icon, isPassword, hidePassword, setHidePassword, isDate, showDatePicker, ...props}) => {
-    return (<View>
-            <LeftIcon>
-                <Octicons name={icon} size={30} color={brand}/>
-            </LeftIcon>
-            <StyledInputLabel>{label}</StyledInputLabel>
-            {!isDate && <StyledTextInput {...props} />}
-            {isDate && (
-                <TouchableOpacity onPress={showDatePicker}>
-                    <StyledTextInput {...props} />
-                </TouchableOpacity>
-            )}
-            {isPassword && (
-                <RightIcon onPress={() => setHidePassword(!hidePassword)}>
-                    <Ionicons name={hidePassword ? 'md-eye-off' : 'md-eye'} size={30} color={darkLight}/>
-                </RightIcon>
-            )}
-        </View>);
-};
 
 export default Signup;

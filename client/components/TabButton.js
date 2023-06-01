@@ -4,7 +4,7 @@ import React, {useState, useContext} from 'react';
 // API client
 import axios from 'axios';
 import { CredentialsContext2 } from './CredentialsContext2';
-const server_url = 'http://192.168.45.152';
+const server_url = 'http://192.168.0.6';
 
 const TabButton = (currentTab, setCurrentTab, title, image, navigation, windowWidth) => {
     const [campaginData, setData] = useState();
@@ -37,7 +37,7 @@ const TabButton = (currentTab, setCurrentTab, title, image, navigation, windowWi
           {navigation.navigate('MyInfoScreen')}
         }
         else if(title == "공지사항"){
-          {navigation.navigate('Notice')}
+          {navigation.navigate('NoticeScreen')}
         }
         else if(title == "사진 찍기"){
           {navigation.navigate('TimeStampCamera')}

@@ -19,7 +19,7 @@ import MyProfileImage from '../../components/MyProfileImage';
 
 //* 아이콘
 import { AntDesign } from '@expo/vector-icons'; 
-const server_url = 'http://192.168.45.152';
+const server_url = 'http://192.168.0.6';
 
 function Separator() {
     return <View style = {styles.separator}/>

@@ -45,7 +45,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //credentials context
 import { CredentialsContext } from '../components/CredentialsContext';
-const server_url = 'http://192.168.45.152';
+const server_url = 'http://192.168.0.6';
 
 const Login = ({navigation}) => {
     const [hidePassword, setHidePassword] = useState(true);

@@ -20,6 +20,8 @@ import TimeStampCamera from '../screens/TimeStampCamera';
 import Article from '../screens/Article';
 import Notice from '../screens/Notice';
 import MainTextView from '../screens/mainText/MainTextView';
+import NoticeScreen from '../screens/noticeView/NoticeScreen';
+import SeeMoreView from '../screens/noticeView/SeeMoreView';
 
 const Stack = createStackNavigator();
 
@@ -48,7 +50,7 @@ const RootStack = () => {
             {storedCredentials ? (
                 <>
                 <Stack.Screen options={{headerShown: false}} name="Welcome" component={Welcome}/>
-                <Stack.Screen name="CampaginView" component={CampaginView}/>
+                <Stack.Screen options={{headerShown: false}} name="CampaginView" component={CampaginView}/>
                 <Stack.Screen options={{headerShown: true}} name="Feed" component={Feed}/>
                 <Stack.Screen options={{headerShown: true}} name="Search" component={Search}/>
                 <Stack.Screen options={{headerShown: true}} name="Notice" component={Notice}/>
@@ -57,6 +59,8 @@ const RootStack = () => {
                 <Stack.Screen options={{headerShown: false}} name="UpdateMyInfoScreen" component={UpdateMyInfoScreen}/>
                 <Stack.Screen options={{headerShown: false}} name="MyInfoScreen" component={MyInfoScreen}/>
                 <Stack.Screen options={{headerShown: false}} name="MainTextView" component={MainTextView}/>
+                <Stack.Screen options={{headerShown: false}} name="NoticeScreen" component={NoticeScreen}/>
+                <Stack.Screen options={{headerShown: false}} name="SeeMoreView" component={SeeMoreView}/>
                 
                 
                 </>

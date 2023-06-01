@@ -16,7 +16,7 @@ import{
 } from '../../components/styles';
 
 import axios from 'axios';
-const server_url = 'http://192.168.45.152';
+const server_url = 'http://192.168.0.6';
 
 function Separator() {
     return <View style = {styles.separator}/>

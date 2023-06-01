@@ -68,7 +68,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //credentials context
 import { CredentialsContext } from '../components/CredentialsContext';
-const server_url = 'http://192.168.45.152';
+const server_url = 'http://192.168.0.6';
 
 const data_init = [
   {
@@ -200,7 +200,7 @@ const CampaginView = ({ navigation, campaginData, props }) => {
     return (
       <ScrollView>
         {
-          list.map((item)=>
+          list.map((item, index)=>
           <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: windowWidth/1.2, height: windowHeight/6, margin: 10}}>
           <View style={Listlayout_styles.Listlayout_body}>
             <View style={{flex: 5}}>
@@ -209,7 +209,7 @@ const CampaginView = ({ navigation, campaginData, props }) => {
               <Text style={{fontSize: 15}}>포인트: {item.campagin_point}</Text>
             </View>
             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingLeft:20}}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('MainTextView', {name: item.campagin_name, number: index, userId: user_id})}>
                 <Text style={{fontSize: 20}}>보기</Text>
               </TouchableOpacity>
             </View>
@@ -222,7 +222,7 @@ const CampaginView = ({ navigation, campaginData, props }) => {
     )
   }
 
-  const Item = ({operatingDate, campagin_point, campagin_name, campagin_volunteerTimer}) => (
+  const Item = ({operatingDate, campagin_point, campagin_name, campagin_volunteerTimer, campagin_number}) => (
 
     <View style={{width: windowWidth/2.3, height: windowHeight/4, marginTop: 10}}>
     <View style={Girdlayout_styles.Girdlayout_body}>
@@ -239,7 +239,7 @@ const CampaginView = ({ navigation, campaginData, props }) => {
     </View>
   
     <View style={{flex: 1, alignItems: 'flex-end', marginTop: 30}}>
-    <TouchableOpacity>
+    <TouchableOpacity onPress={() => navigation.navigate('MainTextView', {name: campagin_name, number: campagin_number, userId: user_id})}>
         <Text style={{fontSize: 20}}>보기</Text>
       </TouchableOpacity>
     </View>
@@ -253,7 +253,7 @@ const CampaginView = ({ navigation, campaginData, props }) => {
         <View style={{paddingHorizontal: windowWidth/20, height: windowHeight}}>
           <FlatList
             data={list}
-            renderItem={({item}) => <Item campagin_operatingDate={item.campagin_operatingDate} campagin_name={item.campagin_name} campagin_point={item.campagin_point} campagin_volunteerTimer={item.campagin_volunteerTimer}/>}
+            renderItem={({item, index}) => <Item campagin_operatingDate={item.campagin_operatingDate} campagin_name={item.campagin_name} campagin_point={item.campagin_point} campagin_volunteerTimer={item.campagin_volunteerTimer} campagin_number={index}/>}
             keyExtractor={(item, index) => index}
             numColumns={2}
           />
@@ -276,7 +276,7 @@ const CampaginView = ({ navigation, campaginData, props }) => {
                 <Text style={{fontSize: 15}}>포인트: {item.campagin_point}</Text>
               </View>
               <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingLeft:20}}>
-                <TouchableOpacity onPress={() => navigation.navigate('MainTextView')}>
+                <TouchableOpacity onPress={() => navigation.navigate('MainTextView', {name: item.campagin_name, number: index, userId: user_id})}>
                   <Text style={{fontSize: 20}}>보기</Text>
                 </TouchableOpacity>
               </View>
@@ -372,47 +372,54 @@ const CampaginView = ({ navigation, campaginData, props }) => {
                 flex: 1,
                 width: '100%',
               }}>
-          <View style={{alignItems: 'flex-end'}}>
-          <TouchableOpacity onPress={() => {
-            // Do Actions Here....
-            // Scaling the view...
-            Animated.timing(scaleValue, {
-              toValue: !showMenu ? 1 : 0.9,
-              duration: 300,
-              useNativeDriver: true
-            })
-              .start()
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flex: 1, alignItems: 'flex-start', marginTop: 50, marginLeft: 10}}>
+              <TouchableOpacity onPress={() => { navigation.reset({ routes: [{ name: 'Welcome' }] }) }}>
+                <AntDesign name="leftcircleo" size={30} color="black" />
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1, alignItems: 'flex-end'}}>
+              <TouchableOpacity onPress={() => {
+                // Do Actions Here....
+                // Scaling the view...
+                Animated.timing(scaleValue, {
+                  toValue: !showMenu ? 1 : 0.9,
+                  duration: 300,
+                  useNativeDriver: true
+                })
+                .start()
 
-            Animated.timing(offsetValue, {
-              // YOur Random Value...
-              toValue: showMenu ? -(windowWidth/1.2) : 0,
-              duration: 300,
-              useNativeDriver: true
-            })
-              .start()
+                Animated.timing(offsetValue, {
+                  // YOur Random Value...
+                  toValue: showMenu ? -(windowWidth/1.2) : 0,
+                  duration: 300,
+                  useNativeDriver: true
+                })
+                .start()
 
-            Animated.timing(closeButtonOffset, {
-              // YOur Random Value...
-              toValue: showMenu ? 0 : 0,
-              duration: 300,
-              useNativeDriver: true
-            })
-              .start()
+                Animated.timing(closeButtonOffset, {
+                  // YOur Random Value...
+                  toValue: showMenu ? 0 : 0,
+                  duration: 300,
+                  useNativeDriver: true
+                })
+                .start()
 
-            setShowMenu(!showMenu);
-            setAnimatedViewRadius(showMenu ? 25 : 0)
-          }}>
+                setShowMenu(!showMenu);
+                setAnimatedViewRadius(showMenu ? 25 : 0)
+              }}>
 
-            <Image source={showMenu ? menu : close} style={{
-              width: 30,
-              height: 30,
-              tintColor: 'black',
-              marginTop: 50,
-              marginRight: 20,
-              justifyContent: 'flex-end'
-            }}></Image>
+                <Image source={showMenu ? menu : close} style={{
+                  width: 30,
+                  height: 30,
+                  tintColor: 'black',
+                  marginTop: 50,
+                  marginRight: 20,
+                  justifyContent: 'flex-end'
+                }}></Image>
 
-          </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={styles.container}>

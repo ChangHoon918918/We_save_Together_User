@@ -1,6 +1,6 @@
 // 진행중 캠패인 화면
 
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions,FlatList,SafeAreaView, TextInput} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions,FlatList,SafeAreaView, TextInput, Alert} from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { AntDesign } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
@@ -11,8 +11,15 @@ import QnAView from './QnAView';
 import { DATA } from "./QnAdata"
 import { DATA2 } from "./data"
 
+import{ 
+  Poster_MAIN,
+} from '../../components/styles';
+
+import axios from 'axios';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+const server_url = 'http://192.168.0.6';
 
 const data_init = [
   {
@@ -38,10 +45,11 @@ const data = [
 
 
 
-const MainTextView = ({ navigation }) => {
+const MainTextView = ({ navigation, route }) => {
     /*FlatList 상태 변수*/
     const [status, setStatus] = useState('Main')
     const [datalist, setDatalist] = useState(data_init)
+    const [list, setData] = useState([]);
 
     /*QnA 화면 작성 변수*/
     const [writeMode, setWriteMode] = useState(false);
@@ -55,6 +63,31 @@ const MainTextView = ({ navigation }) => {
     const [memos2, setMemos2] = useState(DATA2);
     const [idx2, setIdx2] = useState(DATA2.length + 1)
     const [reply2, setReply2] = useState(DATA2);
+
+    const [regist_status_text, setStatusText] = useState("신청하기");
+
+    function post() {
+      const url = `${server_url}:5000/api/campagins/getinfoOne` //(locahhost -> 로컬 와이파이 주소)
+      console.log(route.params.number)
+      axios
+      .post(url,
+        {
+          "campagin_name" : route.params.name
+        }  
+      )
+      .then((response) => {
+          const result = response.data;
+          const {campagin_point, campagin_volunteerTimer, campagin_name, campagin_operatingDate} = result;
+          setData(result);
+          console.log(list);
+      })
+      .catch(error => {
+          console.log(result);
+      })
+    }
+    useEffect(() => {
+      post();
+    }, []);
 
     const setStatusFilter = status => {
       if(status !== 'No'){
@@ -233,26 +266,96 @@ const MainTextView = ({ navigation }) => {
         </SafeAreaView>
     );
     }
+
+    function campagin_registUser() {
+      const url = `${server_url}:5000/api/campagins/registUser` //(locahhost -> 로컬 와이파이 주소)
+      axios
+      .post(url,
+        {
+          "campagin_name" : route.params.name,
+          "register_userId" : route.params.userId
+        }  
+      )
+      .then((response) => {
+          const result = response.data;
+          console.log(result);
+      })
+      .catch(error => {
+          console.log(result);
+      })
+    }
+    function campagin_deleteUser() {
+      const url = `${server_url}:5000/api/campagins/deleteUser` //(locahhost -> 로컬 와이파이 주소)
+      axios
+      .post(url,
+        {
+          "campagin_name" : route.params.name,
+          "register_userId" : route.params.userId
+        }  
+      )
+      .then((response) => {
+          const result = response.data;
+          console.log(result);
+      })
+      .catch(error => {
+          console.log(result);
+      })
+    }
+    const goAlert = () =>{
+      Alert.alert(
+        "신청하시겠습니까?",
+        "신청 후, 활동 증빙 사진까지 등록해야 활동 인정이 됩니다.",
+        [    
+          {
+            text: "아니요",
+            onPress: () => console.log("취소되었습니다."),
+            style: "cancel"
+          },
+          { text: "네", onPress: () => 
+            {
+              console.log("OK 땡큐");
+              campagin_registUser();
+              setStatusText("신청취소");
+            } 
+          },
+        ],
+        { cancelable: true }
+      );
+    }
+    const cancleAlert = () =>{
+      Alert.alert(
+        "취소하시겠습니까?",
+        "신청완료 승인 전까지 취소가 가능합니다.",
+        [    
+          {
+            text: "아니요",
+            onPress: () => console.log("알았어 취소 안할게"),
+            style: "cancel"
+          },
+          { text: "네", onPress: () => 
+            {
+              console.log("취소되었습니다.");
+              campagin_deleteUser();
+              setStatusText("신청하기");
+            } 
+          },
+        ],
+        { cancelable: true }
+      );
+    }
     const MainViewLayout = (props) => {
       return (
-        <View style={{width: 300, height: 300, backgroundColor: 'green'}}>
-          <Text>본문 화면</Text>
-        </View>
-      )
-    }
-
-    const ReviewLayout = (props) => {
-      return (
-        <View style={{width: 300, height: 300, backgroundColor: 'green'}}>
-          <Text>리뷰 화면</Text>
-        </View>
-      )
-    }
-
-    const QnALayout = (props) => {
-      return (
-        <View style={{width: 300, height: 300, backgroundColor: 'green'}}>
-          <Text>QnA 화면</Text>
+        <View style={{flex: 1}}>
+          <Poster_MAIN resizeMode="cover" source={{ uri: `${server_url}:5000/CampaginNum${route.params.number}.jpg?date=` + new Date().toLocaleString() }}/>
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <TouchableOpacity style={styles.RegisterButton} 
+              onPress={
+                regist_status_text === "신청하기" ? goAlert : cancleAlert
+              }
+            >
+              <Text style={{color: 'black', fontSize: 23, fontWeight: 'bold'}}>{regist_status_text}</Text>
+            </TouchableOpacity>
+          </View>        
         </View>
       )
     }
@@ -261,12 +364,12 @@ const MainTextView = ({ navigation }) => {
         <SafeAreaView style={styles.container}>
             <View style={styles.box1}>
                 <TouchableOpacity 
-                    onPress={() => { navigation.reset({ routes: [{ name: 'Welcome' }] }) }}>
+                    onPress={() => { navigation.pop() }}>
                     <AntDesign name="leftcircleo" size={30} color="black" />
                 </TouchableOpacity>
             </View>
           <View style={styles.header}>
-               <Text style={styles.text}>ESG 용기내 챌린지</Text>
+               <Text style={styles.text}>{route.params.name}</Text>
           </View>
 
           <View style={styles.content}>
@@ -322,6 +425,17 @@ const MainTextView = ({ navigation }) => {
         borderBottomWidth: 1,
       },
       FootButtonActive: {
+        backgroundColor: '#FFF1D7'
+      },
+      RegisterButton: {
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 10,
+        backgroundColor: '#EBEBEB',
+        alignItems: 'center',
+        width:200,
+        height:60,
+        borderBottomWidth: 1,
         backgroundColor: '#FFF1D7'
       },
       header: {

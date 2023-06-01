@@ -21,7 +21,13 @@ const campaginSchema = mongoose.Schema({
     campagin_volunteerTimer: {
         type: Number,
         default: 3
-    }
+    },
+    register_user: [
+        {
+            register_userId: {type: String},
+            register_status: {type: Boolean}
+        }
+    ],
 })
 
 const Campagin = mongoose.model('Campagin', campaginSchema)

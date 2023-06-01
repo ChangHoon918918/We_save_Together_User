@@ -63,7 +63,7 @@ import JoinButton from '../components/JoinButton';
 const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const server_url = 'http://192.168.45.152';
+const server_url = 'http://192.168.0.6';
 
 // async-storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -327,7 +327,7 @@ const Welcome = ({navigation, campaginData}) => {
                     <View style={{alignItems: 'center', paddingBottom: 20}}>
                       <PosterList_PV resizeMode="cover" source={{ uri: `${server_url}:5000/CampaginNum${index}.jpg?date=` + new Date().toLocaleString() }}/>
                       <Text>{item.campagin_name}</Text>
-                      {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth)}
+                      {JoinButton(currentTab, setCurrentTab, "지금신청", navigation, windowWidth, {campagin_name:item.campagin_name}, {campagin_number:index}, {campagin_userId:user_id})}
                     </View>
                     )
                   }

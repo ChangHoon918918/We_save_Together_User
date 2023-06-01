@@ -70,7 +70,13 @@ const userSchema = mongoose.Schema({
     avatar_image: {
         data:Buffer,
         contentType: String,
-    }
+    },
+    register_campagin: [
+        {
+            register_campaginName: {type: String},
+            register_status: {type: Boolean}
+        }
+    ],
 })
 
 

@@ -1,11 +1,13 @@
 import { Animated, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Dimensions, Pressable } from 'react-native';
 
-const JoinButton = (currentTab, setCurrentTab, title, navigation, windowWidth) => {
+const JoinButton = (currentTab, setCurrentTab, title, navigation, windowWidth, campagin_name, campagin_number, campagin_userId) => {
   return (
 
     <Pressable onPress={() => {
       if (title == "지금신청") {
-          {navigation.navigate('Feed')}
+          console.log(campagin_name, campagin_number)
+          {navigation.navigate('MainTextView', {name: campagin_name.campagin_name, number: campagin_number.campagin_number, userId: campagin_userId.campagin_userId})}
+          
       } else {
         setCurrentTab(title)
       }

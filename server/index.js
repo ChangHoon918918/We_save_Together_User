@@ -147,6 +147,57 @@ app.post('/api/campagins/register', (req, res) => {
     })
   })
 })
+app.post('/api/campagins/registUser', (req, res) => {
+
+  Campagin.findOneAndUpdate( {campagin_name: req.body.campagin_name}, 
+    {
+      $push:{
+        "register_user" : {
+          "register_userId" : req.body.register_userId,
+          "register_status" : false
+        }
+      }
+    }, (err, user) => {
+    if (err) return res.json({ success: false, err })
+    return res.status(200).json({
+      success: true,
+    })
+  });
+
+  
+  User.findOneAndUpdate( {user_id: req.body.register_userId}, 
+    {
+      $push:{
+        "register_campagin" : {
+          "register_campaginName" : req.body.campagin_name,
+          "register_status" : false
+        }
+      }
+    }, (err, user) => {
+    if (err) return res.json({ success: false, err })
+    return res.status(200).json({
+      success: true,
+    })
+  });
+})
+
+app.post('/api/campagins/deleteUser', (req, res) => {
+
+  Campagin.findOneAndUpdate( {campagin_name: req.body.campagin_name}, 
+    {
+      $pull:{
+        "register_user" : {
+          "register_userId" : req.body.register_userId,
+          "register_status" : false
+        }
+      }
+    }, (err, campagins) => {
+    if (err) return res.json({ success: false, err })
+    return res.status(200).json({
+      success: true,
+    })
+  });
+})
 
 app.post('/api/campagins/getinfo', (req, res) => {
   Campagin.find( (err, campagins) => {
@@ -157,6 +208,13 @@ app.post('/api/campagins/getinfo', (req, res) => {
   //   if(err) return res.status(500).send({error: 'database failure'});
   //   res.json(campagins);
   // })
+})
+
+app.post('/api/campagins/getinfoOne', (req, res) => {
+  Campagin.findOne( {campagin_name: req.body.campagin_name}, (err, campagins) => {
+    if(err) return res.status(500).send({error: 'database failure'});
+    res.json(campagins);
+  })
 })
 
 app.post('/api/users/login', (req, res) => {

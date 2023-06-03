@@ -1,7 +1,7 @@
 // 진행중 캠패인 화면
 
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions,FlatList,SafeAreaView, TextInput, Alert} from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { AntDesign } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons';
@@ -16,10 +16,12 @@ import{
 } from '../../components/styles';
 
 import axios from 'axios';
+import { CredentialsContext } from '../../components/CredentialsContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const server_url = 'http://192.168.0.6';
+import { local_server_url } from '../../assets/server_url/server_url';
+const server_url = local_server_url;
 
 const data_init = [
   {
@@ -46,6 +48,9 @@ const data = [
 
 
 const MainTextView = ({ navigation, route }) => {
+    const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
+    const {user_id, name, email, address, phoneNumber} = storedCredentials;
+
     /*FlatList 상태 변수*/
     const [status, setStatus] = useState('Main')
     const [datalist, setDatalist] = useState(data_init)
@@ -65,6 +70,7 @@ const MainTextView = ({ navigation, route }) => {
     const [reply2, setReply2] = useState(DATA2);
 
     const [regist_status_text, setStatusText] = useState("신청하기");
+    const [btn_disabled, setDisabled] = useState(true);
 
     function post() {
       const url = `${server_url}:5000/api/campagins/getinfoOne` //(locahhost -> 로컬 와이파이 주소)
@@ -77,7 +83,6 @@ const MainTextView = ({ navigation, route }) => {
       )
       .then((response) => {
           const result = response.data;
-          const {campagin_point, campagin_volunteerTimer, campagin_name, campagin_operatingDate} = result;
           setData(result);
           console.log(list);
       })
@@ -85,8 +90,36 @@ const MainTextView = ({ navigation, route }) => {
           console.log(result);
       })
     }
+    function update_userinfo() {
+      const url = `${server_url}:5000/api/users/getuserinfo` //(locahhost -> 로컬 와이파이 주소)
+      axios
+      .post(url,
+          {
+              "user_id" : user_id
+          }   
+      )
+      .then((response) => {
+          const result = response.data;
+          console.log(result);
+          if(result.register_campagin.findIndex(v=>v.register_campaginName === route.params.name) !== -1){
+            if(result.register_campagin.find(v=>v.register_campaginName === route.params.name).register_status === true){
+              setStatusText("신청완료");
+            }
+            else if(result.register_campagin.find(v=>v.register_campaginName === route.params.name).register_status === false){
+              setStatusText("신청취소");
+            }
+            else if(result.register_campagin.find(v=>v.register_campaginName === route.params.name).register_status === null){
+              setStatusText("신청하기");
+            }
+          }
+      })
+      .catch(error => {
+          console.log(result);
+      })
+    }
     useEffect(() => {
       post();
+      update_userinfo();
     }, []);
 
     const setStatusFilter = status => {
@@ -284,8 +317,42 @@ const MainTextView = ({ navigation, route }) => {
           console.log(result);
       })
     }
+    function user_registCampagin() {
+      const url = `${server_url}:5000/api/users/registCampagin` //(locahhost -> 로컬 와이파이 주소)
+      axios
+      .post(url,
+        {
+          "campagin_name" : route.params.name,
+          "register_userId" : route.params.userId
+        }  
+      )
+      .then((response) => {
+          const result = response.data;
+          console.log(result);
+      })
+      .catch(error => {
+          console.log(result);
+      })
+    }
     function campagin_deleteUser() {
       const url = `${server_url}:5000/api/campagins/deleteUser` //(locahhost -> 로컬 와이파이 주소)
+      axios
+      .post(url,
+        {
+          "campagin_name" : route.params.name,
+          "register_userId" : route.params.userId
+        }  
+      )
+      .then((response) => {
+          const result = response.data;
+          console.log(result);
+      })
+      .catch(error => {
+          console.log(result);
+      })
+    }
+    function user_deleteCampagin() {
+      const url = `${server_url}:5000/api/users/deleteCampagin` //(locahhost -> 로컬 와이파이 주소)
       axios
       .post(url,
         {
@@ -315,6 +382,7 @@ const MainTextView = ({ navigation, route }) => {
             {
               console.log("OK 땡큐");
               campagin_registUser();
+              user_registCampagin();
               setStatusText("신청취소");
             } 
           },
@@ -336,6 +404,7 @@ const MainTextView = ({ navigation, route }) => {
             {
               console.log("취소되었습니다.");
               campagin_deleteUser();
+              user_deleteCampagin();
               setStatusText("신청하기");
             } 
           },
@@ -350,7 +419,7 @@ const MainTextView = ({ navigation, route }) => {
           <View style={{alignItems: 'center', justifyContent: 'center'}}>
             <TouchableOpacity style={styles.RegisterButton} 
               onPress={
-                regist_status_text === "신청하기" ? goAlert : cancleAlert
+                regist_status_text === "신청하기" ? goAlert : regist_status_text === "신청취소" ? cancleAlert : setDisabled(false)
               }
             >
               <Text style={{color: 'black', fontSize: 23, fontWeight: 'bold'}}>{regist_status_text}</Text>

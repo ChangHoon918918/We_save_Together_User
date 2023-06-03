@@ -36,27 +36,19 @@ const upload = multer({
   storage: Storage
 }).single('testImage')
 
+const upload_completeImage = multer({
+  storage: Storage
+}).single('completeImage')
+
 // app.post('/upload', (req, res)=>{
-//   upload(req, res, (err)=>{
+//   upload_completeImage(req, res, (err)=>{
 //     if(err){
 //       console.log(err)
 //     }
 //     else{
-//       const newImage = new ImageModel({
-//         name: req.body.name,
-//         image: {
-//           data: req.file.filename,
-//           contentType: 'image/jpg'
-//         }
-//       })
-//       newImage
-//       .save()
-//       .then(()=>
 //       res.send('successfully uploaded'),
 //       console.log(req.file),
 //       console.log(req.body)
-//       )
-//       .catch(err=>console.log(err))
 //     }
 //   })
 // })
@@ -94,6 +86,91 @@ app.post('/api/users/updateUser', (req, res) => {
   })
 })
 
+app.post('/api/campagins/completeUser', (req, res) => {
+  upload_completeImage(req, res, (err)=>{
+    if(err){
+      console.log(err)
+    }
+    else{
+      res.send('successfully uploaded'),
+      console.log(req.file),
+      console.log(req.body)
+    }
+  })
+})
+
+app.post('/api/campagins/registcompleteUser', (req, res) => {
+  Campagin.findOneAndUpdate( {campagin_name: req.body.campagin_name}, 
+    {
+      $push:{
+        "complete_user" : {
+          "complete_userId" : req.body.complete_userId,
+          "complete_status" : false,
+          "complete_imgae" : req.body.complete_imageurl
+        }
+      }
+    }, (err, user) => {
+    if (err) return res.json({ success: false, err })
+    return res.status(200).json({
+      success: true,
+    })
+  });
+})
+
+app.post('/api/users/registcompleteCampagin', (req, res) => {
+  User.findOneAndUpdate( {user_id: req.body.complete_userId}, 
+    {
+      $push:{
+        "complete_campagin" : {
+          "complete_campaginName" : req.body.campagin_name,
+          "complete_status" : false, 
+          "complete_image" : req.body.complete_imageurl
+        }
+      }
+    }, (err, user) => {
+    if (err) return res.json({ success: false, err })
+    return res.status(200).json({
+      success: true,
+    })
+  });
+})
+
+app.post('/api/campagins/deletecompleteUser', (req, res) => {
+  Campagin.findOneAndUpdate( {campagin_name: req.body.campagin_name}, 
+    {
+      $pull:{
+        "complete_user" : {
+          "complete_userId" : req.body.complete_userId,
+          "complete_status" : false,
+          "complete_imgae" : req.body.complete_imageurl
+        }
+      }
+    }, (err, campagins) => {
+    if (err) return res.json({ success: false, err })
+    return res.status(200).json({
+      success: true,
+    })
+  });
+})
+
+app.post('/api/users/deletecompleteCampagin', (req, res) => {
+  User.findOneAndUpdate( {user_id: req.body.complete_userId}, 
+    {
+      $pull:{
+        "complete_campagin" : {
+          "complete_campaginName" : req.body.campagin_name,
+          "complete_status" : false,
+          "complete_image" : req.body.complete_imageurl
+        }
+      }
+    }, (err, campagins) => {
+    if (err) return res.json({ success: false, err })
+    return res.status(200).json({
+      success: true,
+    })
+  });
+})
+
 app.post('/api/users/getuserinfo', (req, res) => {
   User.findOne({user_id: req.body.user_id}, (err, user) => {
     if (err) return res.json({ success: false, err })
@@ -108,7 +185,9 @@ app.post('/api/users/getuserinfo', (req, res) => {
         havingVolunteerTime: user.havingVolunteerTime,
         doingCampagins: user.doingCampagins,
         completeCampagins: user.completeCampagins,
-        avatar_image: user.avatar_image
+        avatar_image: user.avatar_image,
+        register_campagin: user.register_campagin,
+        complete_campagin: user.complete_campagin
       })
   });
 })
@@ -163,14 +242,16 @@ app.post('/api/campagins/registUser', (req, res) => {
       success: true,
     })
   });
+})
 
-  
+app.post('/api/users/registCampagin', (req, res) => {
+
   User.findOneAndUpdate( {user_id: req.body.register_userId}, 
     {
       $push:{
         "register_campagin" : {
           "register_campaginName" : req.body.campagin_name,
-          "register_status" : false
+          "register_status" : false, 
         }
       }
     }, (err, user) => {
@@ -199,15 +280,87 @@ app.post('/api/campagins/deleteUser', (req, res) => {
   });
 })
 
+app.post('/api/users/deleteCampagin', (req, res) => {
+  User.findOneAndUpdate( {user_id: req.body.register_userId}, 
+    {
+      $pull:{
+        "register_campagin" : {
+          "register_campaginName" : req.body.campagin_name,
+          "register_status" : false,
+        }
+      }
+    }, (err, campagins) => {
+    if (err) return res.json({ success: false, err })
+    return res.status(200).json({
+      success: true,
+    })
+  });
+}
+)
+
+app.post('/api/campagins/completeUser', (req, res) => {
+    upload_completeImage(req, res, (err)=>{
+      if(err){
+        console.log(err)
+      }
+      else{
+        User.findOneAndUpdate(
+          {user_id: req.body.user_id}, 
+          {
+            "name" : req.body.changed_name, 
+            "address" : req.body.changed_address, 
+            "email" : req.body.changed_email, 
+            "phoneNumber" : req.body.changed_phoneNumber, 
+            "avatar_image": {data: req.file.filename, contentType: 'image/jpg'}
+          }, (err, user) => {
+          if (err) return res.json({ success: false, err })
+          return res.status(200).json({
+            success: true,
+            user_id: req.body.user_id,
+            name : req.body.changed_name, 
+            address : req.body.changed_address, 
+            email : req.body.changed_email, 
+            phoneNumber : req.body.changed_phoneNumber, 
+          })
+        });
+      }
+    })
+  })
+
+app.post('/api/users/completeCampagin', (req, res) => {
+  User.findOneAndUpdate( {user_id: req.body.complete_userId}, 
+    {
+      $push:{
+        "complete_campagin" : {
+          "complete_campaginName" : req.body.campagin_name,
+          "complete_status" : false,
+          "complete_image" : req.body.complete_imageurl
+        }
+      }
+    }, (err, user) => {
+    if (err) return res.json({ success: false, err })
+    return res.status(200).json({
+      success: true,
+    })
+  });
+})
+  // User.findOneAndUpdate( {user_id: req.body.user_id}, 
+  //   {
+  //     $pop:{
+  //       "register_campagin" : 1
+  //     }
+  //   }, (err, campagins) => {
+  //   if (err) return res.json({ success: false, err })
+  //   return res.status(200).json({
+  //     success: true,
+  //   })
+  // });
+
 app.post('/api/campagins/getinfo', (req, res) => {
   Campagin.find( (err, campagins) => {
     if(err) return res.status(500).send({error: 'database failure'});
     res.json(campagins);
   })
-  // Campagin.findOne( {name: req.body.name}, (err, campagins) => {
-  //   if(err) return res.status(500).send({error: 'database failure'});
-  //   res.json(campagins);
-  // })
 })
 
 app.post('/api/campagins/getinfoOne', (req, res) => {
@@ -244,7 +397,7 @@ app.post('/api/users/login', (req, res) => {
       user.generateToken((err, user) => {
         if (err) return res.status(400).send(err);
 
-        // 토큰을 저장한다.  어디에 ?  쿠키 , 로컳스토리지 
+        // 토큰을 저장한다.  어디에 ?  쿠키 , 로컬스토리지 
         res.cookie("x_auth", user.token)
           .status(200)
           .json({ loginSuccess: true, userId: user._id, user_id: user.user_id, name: user.name, email: user.email, address: user.address, phoneNumber: user.phoneNumber })

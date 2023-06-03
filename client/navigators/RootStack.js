@@ -22,6 +22,8 @@ import Notice from '../screens/Notice';
 import MainTextView from '../screens/mainText/MainTextView';
 import NoticeScreen from '../screens/noticeView/NoticeScreen';
 import SeeMoreView from '../screens/noticeView/SeeMoreView';
+import MyCampagin from '../screens/MyCampagin';
+import DoingTextView from '../screens/mainText/DoingTextView';
 
 const Stack = createStackNavigator();
 
@@ -61,6 +63,8 @@ const RootStack = () => {
                 <Stack.Screen options={{headerShown: false}} name="MainTextView" component={MainTextView}/>
                 <Stack.Screen options={{headerShown: false}} name="NoticeScreen" component={NoticeScreen}/>
                 <Stack.Screen options={{headerShown: false}} name="SeeMoreView" component={SeeMoreView}/>
+                <Stack.Screen options={{headerShown: false}} name="MyCampagin" component={MyCampagin}/>
+                <Stack.Screen options={{headerShown: false}} name="DoingTextView" component={DoingTextView}/>
                 
                 
                 </>

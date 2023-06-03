@@ -59,11 +59,12 @@ import TitleMenuButton from '../components/TitleMenuButton';
 import moveCamapginList from '../components/moveCampaginList';
 import searchInput from '../components/searchInput';
 import JoinButton from '../components/JoinButton';
+import { local_server_url } from '../assets/server_url/server_url';
 
 const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const server_url = 'http://192.168.0.6';
+const server_url = local_server_url;
 
 // async-storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -150,7 +151,6 @@ const Welcome = ({navigation, campaginData}) => {
       )
       .then((response) => {
           const result = response.data;
-          const {user_id, name, email, address, phoneNumber} = result;
           setInfoData(result);
           console.log(user_infolist);
       })

@@ -97,6 +97,17 @@ export const Poster_MAIN = styled.Image`
     margin-top: 15px;
 `;
 
+export const Complete_MAIN = styled.Image`
+    width: ${windowWidth/1.1};
+    height: ${windowHeight/1.5};
+    margin: auto;
+    border-radius: 50px;
+    border-width: 2px;
+    border-color: ${secondary};
+    margin-bottom: 10px;
+    margin-top: 15px;
+`;
+
 export const PosterList_PV = styled.Image`
     width: ${windowWidth/3};
     height: ${windowHeight/4};

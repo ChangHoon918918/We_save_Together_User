@@ -19,7 +19,8 @@ import MyProfileImage from '../../components/MyProfileImage';
 
 //* 아이콘
 import { AntDesign } from '@expo/vector-icons'; 
-const server_url = 'http://192.168.0.6';
+import { local_server_url } from "../../assets/server_url/server_url";
+const server_url = local_server_url;
 
 function Separator() {
     return <View style = {styles.separator}/>

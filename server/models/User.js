@@ -74,7 +74,14 @@ const userSchema = mongoose.Schema({
     register_campagin: [
         {
             register_campaginName: {type: String},
-            register_status: {type: Boolean}
+            register_status: {type: Boolean},
+        }
+    ],
+    complete_campagin: [
+        {
+            complete_campaginName: {type: String},
+            complete_status: {type: Boolean},
+            complete_image: {type: String}
         }
     ],
 })

@@ -4,7 +4,8 @@ import React, {useState, useContext} from 'react';
 // API client
 import axios from 'axios';
 import { CredentialsContext2 } from './CredentialsContext2';
-const server_url = 'http://192.168.0.6';
+import { local_server_url } from '../assets/server_url/server_url';
+const server_url = local_server_url;
 
 const TabButton = (currentTab, setCurrentTab, title, image, navigation, windowWidth) => {
     const [campaginData, setData] = useState();
@@ -18,19 +19,6 @@ const TabButton = (currentTab, setCurrentTab, title, image, navigation, windowWi
             {navigation.navigate('Login')}
         }
         else if(title == "전체 캠페인"){
-          const url = `${server_url}:5000/api/campagins/getinfo` //(locahhost -> 로컬 와이파이 주소)
-          // axios
-          // .post(url)
-          // .then((response) => {
-          //     const result = response.data;
-          //     const {point, volunteerTimer, name, operatingDate} = result;
-          //     setData(result);
-          //     console.log(campaginData.length);
-          //     setStoredCredentials2(result);
-          // })
-          // .catch(error => {
-          //     console.log(result);
-          // })
           {navigation.navigate('CampaginView', {campaginData})}
         }
         else if(title == "My 가입 정보"){
@@ -41,6 +29,9 @@ const TabButton = (currentTab, setCurrentTab, title, image, navigation, windowWi
         }
         else if(title == "사진 찍기"){
           {navigation.navigate('TimeStampCamera')}
+        }
+        else if(title == "My 실시간 캠페인"){
+          {navigation.navigate('MyCampagin')}
         }
         else {
           setCurrentTab(title)

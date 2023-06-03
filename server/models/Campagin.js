@@ -28,6 +28,13 @@ const campaginSchema = mongoose.Schema({
             register_status: {type: Boolean}
         }
     ],
+    complete_user: [
+        {
+            complete_userId: {type: String},
+            complete_status: {type: Boolean},
+            complete_imgae: {type: String}
+        }
+    ]
 })
 
 const Campagin = mongoose.model('Campagin', campaginSchema)
